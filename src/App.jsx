@@ -49,19 +49,28 @@ function App() {
     localStorage.setItem('mathverse_user', JSON.stringify(userData));
   }, [userData]);
 
+  useEffect(() => {
+    // If the page is refreshed, building data is lost. Reset back to the city.
+    if ((currentStage === 'skillTree' || currentStage === 'quiz') && !selectedBuildingData) {
+      setCurrentStage('none');
+    }
+  }, [currentStage, selectedBuildingData]);
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-      {/* Background City - Always Visible */}
-      <FutureTechCity
-        avatarColor={userData?.avatarColor}
-        avatarGender={userData?.avatarGender}
-        accessories={userData?.accessories}
-        cameraMode={cameraMode}
-        onEnterBuilding={(data) => {
-          setSelectedBuildingData(data);
-          setCurrentStage('skillTree');
-        }}
-      />
+      {/* Background City - Visible only when not in a full-screen course/quiz */}
+      {currentStage !== 'skillTree' && currentStage !== 'quiz' && (
+        <FutureTechCity
+          avatarColor={userData?.avatarColor}
+          avatarGender={userData?.avatarGender}
+          accessories={userData?.accessories}
+          cameraMode={cameraMode}
+          onEnterBuilding={(data) => {
+            setSelectedBuildingData(data);
+            setCurrentStage('skillTree');
+          }}
+        />
+      )}
 
       {/* Modals Overlay */}
       <AnimatePresence mode="wait">

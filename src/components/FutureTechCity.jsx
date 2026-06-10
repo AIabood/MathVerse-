@@ -380,9 +380,7 @@ const BUILDINGS_BOUNDS = [
   { x: [-45 - 4, -45 + 4], z: [38 - 4, 38 + 4] },
   { x: [45 - 4, 45 + 4], z: [38 - 4, 38 + 4] },
   { x: [12 - 4, 12 + 4], z: [-50 - 4, -50 + 4] },
-  { x: [12 - 4, 12 + 4], z: [52 - 4, 52 + 4] },
-  // Central Fountain
-  { x: [-2, 2], z: [-2, 2] }
+  { x: [12 - 4, 12 + 4], z: [52 - 4, 52 + 4] }
 ];
 
 function checkCollision(newX, newZ) {
@@ -586,20 +584,8 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
 
           {/* Ground Details (Hills, Bushes, Rocks) */}
           <group>
-            {[[-10, -20], [20, 15], [-25, 25], [25, -25], [15, -15], [-15, 10], [-50, 40], [50, -40], [-40, -50], [45, 50], [60, 20], [-60, -20], [30, 60], [-30, -60], [70, -10], [-70, 15]].map((pos, i) => (
-              <mesh key={`hill-${i}`} position={[pos[0], -0.5, pos[1]]} receiveShadow>
-                <sphereGeometry args={[4 + Math.random() * 2, 16, 16]} />
-                <meshStandardMaterial color="#43a047" flatShading />
-              </mesh>
-            ))}
-            {[...Array(80)].map((_, i) => {
-              const x = (Math.random() - 0.5) * 180;
-              const z = (Math.random() - 0.5) * 180;
-              if (Math.abs(x) < 8 && Math.abs(z) < 8) return null;
-              return Math.random() > 0.5 ?
-                <Bush key={`bush-${i}`} position={[x, 0, z]} scale={0.5 + Math.random()} /> :
-                <Rock key={`rock-${i}`} position={[x, 0, z]} scale={0.3 + Math.random()} />
-            })}
+            {/* Hills removed to prevent overlapping with buildings */}
+            {/* Random bushes and rocks removed as requested to prevent clipping into buildings */}
           </group>
 
           {/* Main Roads System */}
@@ -674,134 +660,7 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             {[[4.5, -10], [4.5, -20], [4.5, 10], [4.5, 20], [4.5, -30], [4.5, -40], [4.5, 30], [4.5, 40], [4.5, 50]].map((pos, i) => <StreetLight key={`sl4-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI, 0]} />)}
           </group>
 
-          {/* MathVerse Central Roundabout */}
-          <group position={[0, 0.1, 0]}>
-            {/* Outer Pavement Ring */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow castShadow>
-              <cylinderGeometry args={[8, 8, 0.15, 48]} />
-              <meshStandardMaterial color="#e0e0e0" />
-            </mesh>
-            {/* Decorative outer ring pattern */}
-            <mesh position={[0, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <torusGeometry args={[7.5, 0.15, 8, 48]} />
-              <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={0.5} />
-            </mesh>
-
-            {/* Inner Green Area */}
-            <mesh position={[0, 0.12, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <circleGeometry args={[6, 48]} />
-              <meshStandardMaterial color="#66bb6a" />
-            </mesh>
-
-            {/* Inner Walkway Ring */}
-            <mesh position={[0, 0.14, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <torusGeometry args={[4, 0.6, 4, 48]} />
-              <meshStandardMaterial color="#d5d5d5" />
-            </mesh>
-
-            {/* Fountain Base - Tier 1 (Large) */}
-            <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[3, 3.2, 0.6, 24]} />
-              <meshStandardMaterial color="#bdc3c7" flatShading metalness={0.3} />
-            </mesh>
-            {/* Water Pool - Tier 1 */}
-            <mesh position={[0, 0.85, 0]}>
-              <cylinderGeometry args={[2.8, 2.8, 0.1, 24]} />
-              <meshStandardMaterial color="#00bcd4" transparent opacity={0.5} emissive="#00bcd4" emissiveIntensity={0.3} />
-            </mesh>
-
-            {/* Fountain Tier 2 (Medium) */}
-            <mesh position={[0, 1.3, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[1.8, 2, 0.6, 16]} />
-              <meshStandardMaterial color="#ecf0f1" flatShading metalness={0.4} />
-            </mesh>
-            {/* Water Pool - Tier 2 */}
-            <mesh position={[0, 1.65, 0]}>
-              <cylinderGeometry args={[1.6, 1.6, 0.1, 16]} />
-              <meshStandardMaterial color="#00f0ff" transparent opacity={0.5} emissive="#00f0ff" emissiveIntensity={0.4} />
-            </mesh>
-
-            {/* Fountain Tier 3 (Top Pillar) */}
-            <mesh position={[0, 2.5, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[0.4, 0.6, 1.5, 12]} />
-              <meshStandardMaterial color="#fff" metalness={0.6} roughness={0.2} />
-            </mesh>
-
-            {/* Holographic MathVerse Sphere */}
-            <Float speed={1.5} rotationIntensity={2} floatIntensity={1.5}>
-              <group position={[0, 5, 0]}>
-                {/* Core Sphere */}
-                <mesh castShadow>
-                  <icosahedronGeometry args={[1, 1]} />
-                  <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={0.8} wireframe />
-                </mesh>
-                {/* Inner Glow */}
-                <mesh>
-                  <sphereGeometry args={[0.6, 16, 16]} />
-                  <meshStandardMaterial color="#fff" emissive="#00f0ff" emissiveIntensity={1.5} />
-                </mesh>
-              </group>
-            </Float>
-
-            {/* Orbiting Rings */}
-            <Float speed={3} rotationIntensity={4}>
-              <mesh position={[0, 5, 0]} rotation={[Math.PI / 4, 0, 0]}>
-                <torusGeometry args={[2, 0.06, 8, 48]} />
-                <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.2} />
-              </mesh>
-            </Float>
-            <Float speed={2} rotationIntensity={3}>
-              <mesh position={[0, 5, 0]} rotation={[-Math.PI / 3, Math.PI / 4, 0]}>
-                <torusGeometry args={[2.5, 0.04, 8, 48]} />
-                <meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={0.8} />
-              </mesh>
-            </Float>
-
-            {/* Corner Pillars with Lights */}
-            {[0, 1, 2, 3, 4, 5].map(i => {
-              const angle = (i / 6) * Math.PI * 2;
-              const px = Math.cos(angle) * 6;
-              const pz = Math.sin(angle) * 6;
-              return (
-                <group key={`pillar-${i}`} position={[px, 0, pz]}>
-                  {/* Pillar */}
-                  <mesh position={[0, 1.5, 0]} castShadow>
-                    <cylinderGeometry args={[0.15, 0.2, 3, 8]} />
-                    <meshStandardMaterial color="#95a5a6" metalness={0.5} />
-                  </mesh>
-                  {/* Top Light */}
-                  <mesh position={[0, 3.1, 0]}>
-                    <sphereGeometry args={[0.25, 8, 8]} />
-                    <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2} />
-                  </mesh>
-                  {/* Base */}
-                  <mesh position={[0, 0.1, 0]} castShadow>
-                    <cylinderGeometry args={[0.3, 0.3, 0.2, 8]} />
-                    <meshStandardMaterial color="#7f8c8d" />
-                  </mesh>
-                </group>
-              );
-            })}
-
-            {/* Small flowers/bushes around the green area */}
-            {[0, 1, 2, 3, 4, 5, 6, 7].map(i => {
-              const angle = (i / 8) * Math.PI * 2;
-              const px = Math.cos(angle) * 4.5;
-              const pz = Math.sin(angle) * 4.5;
-              return (
-                <mesh key={`flower-${i}`} position={[px, 0.3, pz]} castShadow>
-                  <sphereGeometry args={[0.25, 6, 6]} />
-                  <meshStandardMaterial color={['#e74c3c', '#f1c40f', '#e74c3c', '#f1c40f', '#e74c3c', '#f1c40f', '#e74c3c', '#f1c40f'][i]} flatShading />
-                </mesh>
-              );
-            })}
-
-            {/* Small trees around central hub */}
-            <Tree position={[4.5, 0, 0]} scale={0.7} />
-            <Tree position={[-4.5, 0, 0]} scale={0.7} />
-            <Tree position={[0, 0, 4.5]} scale={0.7} />
-            <Tree position={[0, 0, -4.5]} scale={0.7} />
-          </group>
+          {/* MathVerse Central Roundabout removed as requested */}
 
 
 
@@ -971,26 +830,24 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
         {(() => {
           const buildingColors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#e67e22', '#00b894', '#6c5ce7', '#fd79a8'];
           const decoStart = 9;
-          const fountainIndex = BUILDINGS_BOUNDS.length - 1;
           return BUILDINGS_BOUNDS.map((bounds, i) => {
             const cx = (bounds.x[0] + bounds.x[1]) / 2;
             const cz = (bounds.z[0] + bounds.z[1]) / 2;
             const left = ((cx + 100) / 200) * 100;
             const top = ((cz + 100) / 200) * 100;
-            const isFountain = i === fountainIndex;
-            const isDeco = i >= decoStart && !isFountain;
+            const isDeco = i >= decoStart;
             const isInteractive = i < decoStart;
-            const blipColor = isFountain ? '#00f0ff' : isDeco ? 'rgba(150,160,170,0.6)' : buildingColors[i] || '#fff';
-            const blipSize = isFountain ? '6px' : isDeco ? '10px' : '12px';
+            const blipColor = isDeco ? 'rgba(150,160,170,0.6)' : buildingColors[i] || '#fff';
+            const blipSize = isDeco ? '10px' : '12px';
             return (
               <div key={`blip-${i}`} style={{
                 position: 'absolute',
                 left: `${left}%`, top: `${top}%`,
                 width: blipSize, height: blipSize,
                 background: blipColor,
-                borderRadius: isFountain ? '50%' : '3px',
+                borderRadius: '3px',
                 transform: 'translate(-50%, -50%)',
-                boxShadow: isFountain ? '0 0 8px #00f0ff' : isInteractive ? `0 0 6px ${blipColor}` : 'none',
+                boxShadow: isInteractive ? `0 0 6px ${blipColor}` : 'none',
                 border: isInteractive ? '1px solid rgba(255,255,255,0.5)' : 'none'
               }} />
             )
