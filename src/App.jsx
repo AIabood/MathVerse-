@@ -13,6 +13,7 @@ import UserProfile from './components/UserProfile';
 function App() {
   const [cameraMode, setCameraMode] = useState('follow');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [isNight, setIsNight] = useState(false);
   const [currentStage, setCurrentStage] = useState(() => {
     const savedStage = localStorage.getItem('mathverse_stage');
     // If user was previously in a transient state, reset to 'none' to show the city
@@ -65,6 +66,7 @@ function App() {
           avatarGender={userData?.avatarGender}
           accessories={userData?.accessories}
           cameraMode={cameraMode}
+          isNight={isNight}
           onEnterBuilding={(data) => {
             setSelectedBuildingData(data);
             setCurrentStage('skillTree');
@@ -210,6 +212,24 @@ function App() {
                     }}
                   >
                     {cameraMode === 'follow' ? '🔭 Follow' : '🚁 Top-Down'}
+                  </button>
+                </div>
+
+                {/* Day / Night Toggle */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#fff', fontSize: '0.9rem', fontWeight: 'bold' }}>Time of Day</span>
+                  <button
+                    onClick={() => setIsNight(n => !n)}
+                    style={{
+                      background: isNight ? 'rgba(100,80,255,0.2)' : 'rgba(255,220,50,0.15)',
+                      border: isNight ? '1px solid #a78bfa' : '1px solid #fbbf24',
+                      color: isNight ? '#a78bfa' : '#fbbf24',
+                      padding: '6px 12px', borderRadius: '8px',
+                      cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold',
+                      transition: 'all 0.4s ease'
+                    }}
+                  >
+                    {isNight ? '🌙 Night' : '☀️ Day'}
                   </button>
                 </div>
               </motion.div>

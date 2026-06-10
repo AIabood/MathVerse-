@@ -42,17 +42,43 @@ function SidewalkBlock({ position, size }) {
   );
 }
 
-function StreetLight({ position, rotation }) {
+function StreetLight({ position, rotation, lightPower = 18 }) {
   return (
     <group position={position} rotation={rotation}>
       {/* Pole */}
-      <mesh position={[0, 1.5, 0]} castShadow><cylinderGeometry args={[0.05, 0.1, 3, 8]} /><meshStandardMaterial color="#333" /></mesh>
-      {/* Top Arm */}
-      <mesh position={[0.4, 3, 0]} castShadow rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.05, 0.05, 0.8, 8]} /><meshStandardMaterial color="#333" /></mesh>
-      {/* Light Bulb */}
-      <mesh position={[0.7, 2.9, 0]}><boxGeometry args={[0.2, 0.1, 0.1]} /><meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={1} /></mesh>
-      {/* Light Glow */}
-      <mesh position={[0.7, 2.4, 0]}><coneGeometry args={[0.8, 1, 16]} /><meshBasicMaterial color="#fff" transparent opacity={0.1} /></mesh>
+      <mesh position={[0, 1.5, 0]} castShadow>
+        <cylinderGeometry args={[0.05, 0.1, 3, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      {/* Top Arm — extends in local -X so it faces the road after group rotation */}
+      <mesh position={[-0.4, 3, 0]} castShadow rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.8, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      {/* Light Housing */}
+      <mesh position={[-0.7, 2.85, 0]} castShadow>
+        <boxGeometry args={[0.28, 0.12, 0.18]} />
+        <meshStandardMaterial color="#222" metalness={0.6} roughness={0.3} />
+      </mesh>
+      {/* Light Bulb (glowing) */}
+      <mesh position={[-0.7, 2.82, 0]}>
+        <boxGeometry args={[0.18, 0.07, 0.1]} />
+        <meshStandardMaterial color="#ffe8a0" emissive="#ffe8a0" emissiveIntensity={3} />
+      </mesh>
+      {/* Cone glow effect pointing down */}
+      <mesh position={[-0.7, 2.3, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.7, 1.2, 16, 1, true]} />
+        <meshBasicMaterial color="#ffe8a0" transparent opacity={0.07} side={2} />
+      </mesh>
+      {/* Point Light shining downward onto road */}
+      <pointLight
+        position={[-0.7, 2.8, 0]}
+        color="#ffe8a0"
+        intensity={lightPower}
+        distance={12}
+        decay={2}
+        castShadow={false}
+      />
     </group>
   );
 }
@@ -72,6 +98,55 @@ function Bush({ position, scale = 1 }) {
       <sphereGeometry args={[0.6, 7, 7]} />
       <meshStandardMaterial color="#27ae60" flatShading />
     </mesh>
+  );
+}
+
+// ── Professional Mountain ────────────────────────────────────────────────────
+// Each mountain is 6 overlapping cones: base skirt → main body → shoulder →
+// upper face → sharp tip → snow.  Rotate Y randomly for silhouette variety.
+function Mountain({ position, scale = 1, rotY = 0, snow = true }) {
+  const h = 30 * scale;
+  const r = 13 * scale;
+  return (
+    <group position={[position[0], 0, position[2]]} rotation={[0, rotY, 0]}>
+      {/* 1 — Wide dark base / foothills skirt */}
+      <mesh position={[0, h * 0.06, 0]} castShadow receiveShadow>
+        <coneGeometry args={[r * 1.55, h * 0.16, 6]} />
+        <meshStandardMaterial color="#1e2d3d" flatShading roughness={1} />
+      </mesh>
+      {/* 2 — Main mountain body */}
+      <mesh position={[0, h * 0.42, 0]} castShadow receiveShadow>
+        <coneGeometry args={[r, h * 0.85, 7]} />
+        <meshStandardMaterial color="#2d3f52" flatShading roughness={0.95} />
+      </mesh>
+      {/* 3 — Shoulder / secondary ridge (offset left) */}
+      <mesh position={[-r * 0.38, h * 0.22, r * 0.18]} rotation={[0, 0.5, 0]} castShadow receiveShadow>
+        <coneGeometry args={[r * 0.52, h * 0.52, 6]} />
+        <meshStandardMaterial color="#3a4f63" flatShading roughness={0.93} />
+      </mesh>
+      {/* 4 — Upper rocky face — brighter midtone layer */}
+      <mesh position={[0, h * 0.68, 0]} castShadow receiveShadow>
+        <coneGeometry args={[r * 0.42, h * 0.56, 7]} />
+        <meshStandardMaterial color="#4d6278" flatShading roughness={0.88} />
+      </mesh>
+      {/* 5 — Sharp jagged tip */}
+      <mesh position={[0, h * 0.91, 0]} castShadow>
+        <coneGeometry args={[r * 0.14, h * 0.22, 5]} />
+        <meshStandardMaterial color="#5a7080" flatShading roughness={0.8} />
+      </mesh>
+      {/* 6 — Snow cap */}
+      {snow && <>
+        <mesh position={[0, h * 0.845, 0]} castShadow>
+          <coneGeometry args={[r * 0.28, h * 0.2, 7]} />
+          <meshStandardMaterial color="#dfe6ed" flatShading roughness={0.4} />
+        </mesh>
+        {/* Snow patch on shoulder */}
+        <mesh position={[-r * 0.38, h * 0.38, r * 0.18]} rotation={[0, 0.5, 0]} castShadow>
+          <coneGeometry args={[r * 0.12, h * 0.09, 5]} />
+          <meshStandardMaterial color="#ecf0f1" flatShading roughness={0.4} />
+        </mesh>
+      </>}
+    </group>
   );
 }
 
@@ -355,6 +430,7 @@ function DecoBuilding({ position, color, size, type = 'box' }) {
   );
 }
 
+// Box colliders — buildings & deco structures
 const BUILDINGS_BOUNDS = [
   // Algebra Tower [-14, -14]
   { x: [-14 - 3, -14 + 3], z: [-14 - 3, -14 + 3] },
@@ -383,8 +459,48 @@ const BUILDINGS_BOUNDS = [
   { x: [12 - 4, 12 + 4], z: [52 - 4, 52 + 4] }
 ];
 
+// Circular colliders — trees, rocks, roundabout pillars  [cx, cz, radius]
+const CIRCLE_BOUNDS = [
+  // ── Inner city trees (around intersection) ──
+  [-8, -8, 0.9], [-6, -10, 0.7], [8, -8, 1.1], [10, -6, 0.8],
+  [-10, 8, 1.0], [-8, 10, 0.7], [10, 8, 0.9], [8, 10, 1.1],
+
+  // ── Trees near buildings ──
+  [-24, 4, 0.9], [-32, -3, 0.7], [24, -4, 1.0], [32, 3, 0.7],
+  [-10, 26, 0.8], [10, 32, 0.9], [18, 24, 0.6], [-18, 32, 1.1],
+
+  // ── Outer world trees ──
+  [-50, 15, 1.2], [-55, -15, 1.0], [50, -15, 1.2], [55, 18, 0.9],
+  [-40, -35, 1.4], [40, 35, 1.1], [-60, 30, 1.0], [60, -30, 1.3],
+  [0, 50, 1.2], [0, -50, 1.0], [-35, 50, 0.8], [35, -50, 1.3],
+  [-70, 0, 1.6], [70, 0, 1.5], [45, 45, 1.0], [-45, -45, 1.2],
+  [-65, 40, 0.9], [65, -40, 1.1],
+
+  // ── Street lights – South side of horizontal road (z ≈ -4.5) ──
+  [-10, -4.5, 0.3], [-20, -4.5, 0.3], [10, -4.5, 0.3], [20, -4.5, 0.3],
+  [-30, -4.5, 0.3], [-40, -4.5, 0.3], [30, -4.5, 0.3], [40, -4.5, 0.3],
+  [-50, -4.5, 0.3], [50, -4.5, 0.3],
+
+  // ── Street lights – North side of horizontal road (z ≈ 4.5) ──
+  [-10, 4.5, 0.3], [-20, 4.5, 0.3], [10, 4.5, 0.3], [20, 4.5, 0.3],
+  [-30, 4.5, 0.3], [-40, 4.5, 0.3], [30, 4.5, 0.3], [40, 4.5, 0.3],
+  [-50, 4.5, 0.3], [50, 4.5, 0.3],
+
+  // ── Street lights – West side of vertical road (x ≈ -4.5) ──
+  [-4.5, -10, 0.3], [-4.5, -20, 0.3], [-4.5, 10, 0.3], [-4.5, 20, 0.3],
+  [-4.5, -30, 0.3], [-4.5, -40, 0.3], [-4.5, 30, 0.3], [-4.5, 40, 0.3],
+  [-4.5, 50, 0.3],
+
+  // ── Street lights – East side of vertical road (x ≈ 4.5) ──
+  [4.5, -10, 0.3], [4.5, -20, 0.3], [4.5, 10, 0.3], [4.5, 20, 0.3],
+  [4.5, -30, 0.3], [4.5, -40, 0.3], [4.5, 30, 0.3], [4.5, 40, 0.3],
+  [4.5, 50, 0.3],
+];
+
 function checkCollision(newX, newZ) {
-  const playerRadius = 0.5; // Padding so player doesn't clip into walls
+  const playerRadius = 0.5;
+
+  // Box colliders (buildings)
   for (let box of BUILDINGS_BOUNDS) {
     if (
       newX + playerRadius > box.x[0] &&
@@ -395,6 +511,16 @@ function checkCollision(newX, newZ) {
       return true;
     }
   }
+
+  // Circle colliders (trees, rocks, pillars)
+  for (let [cx, cz, r] of CIRCLE_BOUNDS) {
+    const dx = newX - cx;
+    const dz = newZ - cz;
+    if (dx * dx + dz * dz < (r + playerRadius) * (r + playerRadius)) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -533,7 +659,7 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
   );
 }
 
-export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGender, accessories, cameraMode }) {
+export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGender, accessories, cameraMode, isNight }) {
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const mapMarkerRef = useRef(null);
 
@@ -554,19 +680,31 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
     { name: 'right', keys: ['ArrowRight', 'KeyD', 'd'] },
   ], []);
 
+  // ── Day / Night scene values ──────────────────────────────────────
+  const skyColor    = isNight ? '#05060f' : '#a0d8ef';
+  const fogColor    = isNight ? '#05060f' : '#a0d8ef';
+  const fogNear     = isNight ? 30 : 40;
+  const fogFar      = isNight ? 120 : 150;
+  const ambInt      = isNight ? 0.04 : 0.6;
+  const ambColor    = isNight ? '#2020ff' : '#ffffff';
+  const sunInt      = isNight ? 0.08 : 1.2;
+  const sunPos      = isNight ? [-15, 8, 5] : [15, 30, -5];   // moon low on horizon
+  const grassColor  = isNight ? '#1a3a1a' : '#4caf50';
+  const lampPower   = isNight ? 22 : 0;   // lamps off during day
+
   return (
-    <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, background: '#a0d8ef' }}>
+    <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, background: skyColor, transition: 'background 2s ease' }}>
       <KeyboardControls map={keyboardMap}>
         <Canvas shadows>
           <PerspectiveCamera makeDefault position={[0, 5, -10]} fov={60} near={0.1} far={1000} />
 
-          <color attach="background" args={['#a0d8ef']} />
-          <fog attach="fog" args={['#a0d8ef', 40, 150]} />
+          <color attach="background" args={[skyColor]} />
+          <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
 
-          <ambientLight intensity={0.6} color="#ffffff" />
+          <ambientLight intensity={ambInt} color={ambColor} />
           <directionalLight
-            position={[15, 30, -5]}
-            intensity={1.2}
+            position={sunPos}
+            intensity={sunInt}
             castShadow
             shadow-mapSize={[2048, 2048]}
             shadow-camera-left={-60}
@@ -576,11 +714,99 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             shadow-bias={-0.0001}
           />
 
+          {/* Stars — visible only at night */}
+          {isNight && (
+            <group>
+              {Array.from({ length: 200 }, (_, i) => {
+                const theta = Math.random() * Math.PI * 2;
+                const phi   = Math.random() * Math.PI * 0.5; // upper hemisphere only
+                const r     = 160 + Math.random() * 20;
+                return (
+                  <mesh key={`star-${i}`}
+                    position={[
+                      r * Math.sin(phi) * Math.cos(theta),
+                      r * Math.cos(phi),
+                      r * Math.sin(phi) * Math.sin(theta)
+                    ]}
+                  >
+                    <sphereGeometry args={[0.25 + Math.random() * 0.35, 4, 4]} />
+                    <meshBasicMaterial color="#ffffff" />
+                  </mesh>
+                );
+              })}
+              {/* Moon */}
+              <mesh position={[-60, 55, -80]}>
+                <sphereGeometry args={[6, 16, 16]} />
+                <meshBasicMaterial color="#e8e0c8" />
+              </mesh>
+            </group>
+          )}
+
           {/* Main Ground (Grass) */}
           <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[200, 200]} />
-            <meshStandardMaterial color="#4caf50" roughness={1} />
+            <meshStandardMaterial color={grassColor} roughness={1} />
           </mesh>
+
+          {/* ====== Professional Mountain Ranges ====== */}
+          <group>
+            {/* ── North range (z ≈ -88 → -115) ─────────────────────── */}
+            {/* Front row */}
+            <Mountain position={[-72, 0, -90]}  scale={1.1} rotY={0.3}  snow={true}  />
+            <Mountain position={[-44, 0, -96]}  scale={1.4} rotY={-0.5} snow={true}  />
+            <Mountain position={[-18, 0, -88]}  scale={0.9} rotY={1.1}  snow={false} />
+            <Mountain position={[  2, 0, -102]} scale={1.6} rotY={0.2}  snow={true}  />
+            <Mountain position={[ 26, 0, -91]}  scale={1.2} rotY={-0.8} snow={true}  />
+            <Mountain position={[ 50, 0, -88]}  scale={1.0} rotY={0.6}  snow={false} />
+            <Mountain position={[ 74, 0, -96]}  scale={1.35} rotY={-0.3} snow={true} />
+            {/* Back layer */}
+            <Mountain position={[-58, 0, -113]} scale={0.6}  rotY={0.9}  snow={false} />
+            <Mountain position={[ -8, 0, -110]} scale={0.65} rotY={-0.4} snow={false} />
+            <Mountain position={[ 35, 0, -111]} scale={0.55} rotY={0.7}  snow={false} />
+            <Mountain position={[ 68, 0, -112]} scale={0.62} rotY={-0.9} snow={false} />
+
+            {/* ── South range (z ≈ 88 → 115) ──────────────────────── */}
+            <Mountain position={[-74, 0,  92]}  scale={1.15} rotY={-0.4} snow={true}  />
+            <Mountain position={[-46, 0,  88]}  scale={0.95} rotY={0.8}  snow={false} />
+            <Mountain position={[-18, 0,  98]}  scale={1.5}  rotY={-0.2} snow={true}  />
+            <Mountain position={[  6, 0,  90]}  scale={1.1}  rotY={1.0}  snow={false} />
+            <Mountain position={[ 32, 0,  96]}  scale={1.3}  rotY={-0.6} snow={true}  />
+            <Mountain position={[ 58, 0,  90]}  scale={0.9}  rotY={0.4}  snow={false} />
+            <Mountain position={[ 80, 0,  99]}  scale={1.25} rotY={-1.2} snow={true}  />
+            {/* Back layer */}
+            <Mountain position={[-38, 0, 112]}  scale={0.6}  rotY={0.5}  snow={false} />
+            <Mountain position={[ 14, 0, 113]}  scale={0.7}  rotY={-0.7} snow={false} />
+            <Mountain position={[ 58, 0, 110]}  scale={0.58} rotY={0.3}  snow={false} />
+
+            {/* ── West range (x ≈ -88 → -115) ─────────────────────── */}
+            <Mountain position={[-90, 0, -62]}  scale={1.2}  rotY={1.5}  snow={true}  />
+            <Mountain position={[-88, 0, -32]}  scale={0.95} rotY={2.2}  snow={false} />
+            <Mountain position={[-98, 0,   0]}  scale={1.55} rotY={1.8}  snow={true}  />
+            <Mountain position={[-90, 0,  30]}  scale={1.1}  rotY={2.6}  snow={true}  />
+            <Mountain position={[-95, 0,  62]}  scale={1.3}  rotY={1.3}  snow={false} />
+            {/* Back layer */}
+            <Mountain position={[-112, 0, -48]} scale={0.62} rotY={2.0}  snow={false} />
+            <Mountain position={[-113, 0,  12]} scale={0.65} rotY={2.8}  snow={false} />
+            <Mountain position={[-110, 0,  52]} scale={0.58} rotY={1.6}  snow={false} />
+
+            {/* ── East range (x ≈ 88 → 115) ───────────────────────── */}
+            <Mountain position={[ 92, 0, -65]}  scale={1.1}  rotY={-1.5} snow={true}  />
+            <Mountain position={[ 88, 0, -30]}  scale={1.45} rotY={-2.0} snow={true}  />
+            <Mountain position={[ 98, 0,   5]}  scale={1.0}  rotY={-1.8} snow={false} />
+            <Mountain position={[ 90, 0,  36]}  scale={1.35} rotY={-2.5} snow={true}  />
+            <Mountain position={[ 96, 0,  66]}  scale={0.9}  rotY={-1.2} snow={false} />
+            {/* Back layer */}
+            <Mountain position={[110, 0, -52]}  scale={0.6}  rotY={-2.2} snow={false} />
+            <Mountain position={[113, 0,  14]}  scale={0.68} rotY={-2.7} snow={false} />
+            <Mountain position={[110, 0,  58]}  scale={0.55} rotY={-1.4} snow={false} />
+
+            {/* ── Corner massifs (where borders meet) ─────────────── */}
+            <Mountain position={[-85, 0, -87]}  scale={1.2}  rotY={0.8}  snow={true}  />
+            <Mountain position={[ 85, 0, -87]}  scale={1.3}  rotY={-0.6} snow={true}  />
+            <Mountain position={[-85, 0,  88]}  scale={1.1}  rotY={1.2}  snow={true}  />
+            <Mountain position={[ 85, 0,  88]}  scale={1.25} rotY={-1.0} snow={true}  />
+          </group>
+
 
           {/* Ground Details (Hills, Bushes, Rocks) */}
           <group>
@@ -590,38 +816,59 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
 
           {/* Main Roads System */}
           <group position={[0, 0, 0]}>
-            {/* Horizontal Road */}
+            {/* Horizontal Road - Asphalt */}
             <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
               <planeGeometry args={[200, 8]} />
-              <meshStandardMaterial color="#7f8c8d" />
+              <meshStandardMaterial color="#2b2b2b" roughness={0.9} />
             </mesh>
-            {/* Vertical Road */}
+            {/* Vertical Road - Asphalt */}
             <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
               <planeGeometry args={[8, 200]} />
-              <meshStandardMaterial color="#7f8c8d" />
-            </mesh>
-            {/* Outer Ring Road - Horizontal at z=28 */}
-            <mesh position={[0, 0.05, 28]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[80, 6]} />
-              <meshStandardMaterial color="#7f8c8d" />
-            </mesh>
-            {/* Outer Ring Road - Horizontal at z=-20 */}
-            <mesh position={[0, 0.05, -20]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[80, 6]} />
-              <meshStandardMaterial color="#7f8c8d" />
-            </mesh>
-            {/* Outer Ring Road - Vertical at x=-28 */}
-            <mesh position={[-28, 0.05, 4]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[6, 56]} />
-              <meshStandardMaterial color="#7f8c8d" />
-            </mesh>
-            {/* Outer Ring Road - Vertical at x=28 */}
-            <mesh position={[28, 0.05, 4]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[6, 56]} />
-              <meshStandardMaterial color="#7f8c8d" />
+              <meshStandardMaterial color="#2b2b2b" roughness={0.9} />
             </mesh>
 
-            {/* Road Dashed Lines */}
+            {/* Outer Ring Roads */}
+            {[
+              [0, 28, 80, 6], [0, -20, 80, 6],
+              [-28, 4, 6, 56], [28, 4, 6, 56]
+            ].map(([x, z, w, h], i) => (
+              <group key={`ring-${i}`} position={[x, 0, z]}>
+                {/* Asphalt */}
+                <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                  <planeGeometry args={[w, h]} />
+                  <meshStandardMaterial color="#2b2b2b" roughness={0.9} />
+                </mesh>
+              </group>
+            ))}
+
+            {/* Natural Entrances / Gates at the 4 ends of the city */}
+            {[
+              [0, 95, 0], [0, -95, 0], [95, 0, Math.PI / 2], [-95, 0, Math.PI / 2]
+            ].map(([x, z, rot], i) => (
+              <group key={`entrance-${i}`} position={[x, 0, z]} rotation={[0, rot, 0]}>
+                {/* Stone Pillars */}
+                <mesh position={[-5, 2.5, 0]} castShadow receiveShadow>
+                  <boxGeometry args={[1.5, 5, 1.5]} />
+                  <meshStandardMaterial color="#7f8c8d" roughness={0.9} />
+                </mesh>
+                <mesh position={[5, 2.5, 0]} castShadow receiveShadow>
+                  <boxGeometry args={[1.5, 5, 1.5]} />
+                  <meshStandardMaterial color="#7f8c8d" roughness={0.9} />
+                </mesh>
+                {/* Arch Top / Banner */}
+                <mesh position={[0, 5.25, 0]} castShadow receiveShadow>
+                  <boxGeometry args={[11, 0.5, 1]} />
+                  <meshStandardMaterial color="#2c3e50" roughness={0.8} />
+                </mesh>
+                {/* Bushes near entrance */}
+                <Bush position={[-6.5, 0, 0]} scale={1.2} />
+                <Bush position={[6.5, 0, 0]} scale={1.2} />
+              </group>
+            ))}
+
+            {/* --- Road Markings (تخطيط الشوارع) --- */}
+            
+            {/* Center Dashed Lines (Yellow) */}
             {[...Array(40)].map((_, i) => (
               <mesh key={`hline-${i}`} position={[-95 + i * 5, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[2, 0.2]} /><meshStandardMaterial color="#f1c40f" />
@@ -633,31 +880,41 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
               </mesh>
             ))}
 
-            {/* Sidewalk Borders */}
-            <mesh position={[0, 0.1, -4.2]} receiveShadow castShadow><boxGeometry args={[200, 0.2, 0.4]} /><meshStandardMaterial color="#ecf0f1" /></mesh>
-            <mesh position={[0, 0.1, 4.2]} receiveShadow castShadow><boxGeometry args={[200, 0.2, 0.4]} /><meshStandardMaterial color="#ecf0f1" /></mesh>
-            <mesh position={[-4.2, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.4, 0.2, 200]} /><meshStandardMaterial color="#ecf0f1" /></mesh>
-            <mesh position={[4.2, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.4, 0.2, 200]} /><meshStandardMaterial color="#ecf0f1" /></mesh>
+            {/* Continuous Edge Lines (White) */}
+            {/* Horizontal Edge Lines */}
+            <mesh position={[0, 0.06, -3.7]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
+            <mesh position={[0, 0.06, 3.7]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
+            {/* Vertical Edge Lines */}
+            <mesh position={[-3.7, 0.06, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
+            <mesh position={[3.7, 0.06, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
 
-            {/* Crosswalks */}
+            {/* Sidewalk Borders (Natural Stone) */}
+            <mesh position={[0, 0.1, -4.3]} receiveShadow castShadow><boxGeometry args={[200, 0.3, 0.6]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
+            <mesh position={[0, 0.1, 4.3]} receiveShadow castShadow><boxGeometry args={[200, 0.3, 0.6]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
+            <mesh position={[-4.3, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.6, 0.3, 200]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
+            <mesh position={[4.3, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.6, 0.3, 200]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
+
+            {/* Crosswalks (Faded White) */}
             {[...Array(6)].map((_, i) => (
-              <mesh key={`cw-n-${i}`} position={[-3 + i * 1.2, 0.06, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="#fff" /></mesh>
+              <mesh key={`cw-n-${i}`} position={[-3 + i * 1.2, 0.06, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
             ))}
             {[...Array(6)].map((_, i) => (
-              <mesh key={`cw-s-${i}`} position={[-3 + i * 1.2, 0.06, 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="#fff" /></mesh>
+              <mesh key={`cw-s-${i}`} position={[-3 + i * 1.2, 0.06, 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
             ))}
             {[...Array(6)].map((_, i) => (
-              <mesh key={`cw-e-${i}`} position={[5, 0.06, -3 + i * 1.2]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="#fff" /></mesh>
+              <mesh key={`cw-e-${i}`} position={[5, 0.06, -3 + i * 1.2]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
             ))}
             {[...Array(6)].map((_, i) => (
-              <mesh key={`cw-w-${i}`} position={[-5, 0.06, -3 + i * 1.2]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="#fff" /></mesh>
+              <mesh key={`cw-w-${i}`} position={[-5, 0.06, -3 + i * 1.2]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
             ))}
 
             {/* Streetlights - Main roads */}
-            {[[-10, -4.5], [-20, -4.5], [10, -4.5], [20, -4.5], [-30, -4.5], [-40, -4.5], [30, -4.5], [40, -4.5], [-50, -4.5], [50, -4.5]].map((pos, i) => <StreetLight key={`sl1-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI / 2, 0]} />)}
-            {[[-10, 4.5], [-20, 4.5], [10, 4.5], [20, 4.5], [-30, 4.5], [-40, 4.5], [30, 4.5], [40, 4.5], [-50, 4.5], [50, 4.5]].map((pos, i) => <StreetLight key={`sl2-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, -Math.PI / 2, 0]} />)}
-            {[[-4.5, -10], [-4.5, -20], [-4.5, 10], [-4.5, 20], [-4.5, -30], [-4.5, -40], [-4.5, 30], [-4.5, 40], [-4.5, 50]].map((pos, i) => <StreetLight key={`sl3-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, 0, 0]} />)}
-            {[[4.5, -10], [4.5, -20], [4.5, 10], [4.5, 20], [4.5, -30], [4.5, -40], [4.5, 30], [4.5, 40], [4.5, 50]].map((pos, i) => <StreetLight key={`sl4-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI, 0]} />)}
+            {[[-10, -4.5], [-20, -4.5], [10, -4.5], [20, -4.5], [-30, -4.5], [-40, -4.5], [30, -4.5], [40, -4.5], [-50, -4.5], [50, -4.5]].map((pos, i) => <StreetLight key={`sl1-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI / 2, 0]} lightPower={lampPower} />)}
+            {[[-10, 4.5], [-20, 4.5], [10, 4.5], [20, 4.5], [-30, 4.5], [-40, 4.5], [30, 4.5], [40, 4.5], [-50, 4.5], [50, 4.5]].map((pos, i) => <StreetLight key={`sl2-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, -Math.PI / 2, 0]} lightPower={lampPower} />)}
+            {/* sl3: x=-4.5 (west side) → arm must point toward +X (road center), so rotation π */}
+            {[[-4.5, -10], [-4.5, -20], [-4.5, 10], [-4.5, 20], [-4.5, -30], [-4.5, -40], [-4.5, 30], [-4.5, 40], [-4.5, 50]].map((pos, i) => <StreetLight key={`sl3-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI, 0]} lightPower={lampPower} />)}
+            {/* sl4: x=+4.5 (east side) → arm must point toward -X (road center), so rotation 0 */}
+            {[[4.5, -10], [4.5, -20], [4.5, 10], [4.5, 20], [4.5, -30], [4.5, -40], [4.5, 30], [4.5, 40], [4.5, 50]].map((pos, i) => <StreetLight key={`sl4-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, 0, 0]} lightPower={lampPower} />)}
           </group>
 
           {/* MathVerse Central Roundabout removed as requested */}
@@ -784,6 +1041,137 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
               <mesh position={[0.6, 0.15, 0]} castShadow><boxGeometry args={[0.1, 0.3, 0.4]} /><meshStandardMaterial color="#333" /></mesh>
             </group>
           ))}
+
+          {/* ====== Lake & Nature Zone ====== */}
+          <group position={[-58, 0, 18]}>
+            {/* Sandy / muddy shore base */}
+            <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[14, 10, 1]} receiveShadow>
+              <circleGeometry args={[1, 32]} />
+              <meshStandardMaterial color="#c2a96e" roughness={1} />
+            </mesh>
+
+            {/* Water surface — main layer */}
+            <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[11, 7.5, 1]} receiveShadow>
+              <circleGeometry args={[1, 32]} />
+              <meshStandardMaterial
+                color={isNight ? '#0a1a3a' : '#1e90ff'}
+                transparent opacity={0.78}
+                roughness={0.05}
+                metalness={0.2}
+                emissive={isNight ? '#0a1a4a' : '#006bb3'}
+                emissiveIntensity={isNight ? 0.4 : 0.1}
+              />
+            </mesh>
+
+            {/* Water shimmer layer on top */}
+            <mesh position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[10.5, 7, 1]}>
+              <circleGeometry args={[1, 32]} />
+              <meshStandardMaterial color="#87ceeb" transparent opacity={0.2} roughness={0} />
+            </mesh>
+
+            {/* Rocks around the shore — various sizes */}
+            {[
+              [10, 0, 0,   1.4, '#7f8c8d'],   // East big
+              [8,  0, 4,   0.8, '#95a5a6'],
+              [5,  0, 8,   1.1, '#6d7d8b'],
+              [-2, 0, 9.5, 0.9, '#7f8c8d'],
+              [-8, 0, 7,   1.3, '#555f69'],
+              [-12,0, 2,   1.0, '#95a5a6'],
+              [-11,0,-4,   0.7, '#6d7d8b'],
+              [-7, 0,-8,   1.2, '#7f8c8d'],
+              [0,  0,-9.5, 0.9, '#9aabb5'],
+              [6,  0,-7,   1.4, '#555f69'],
+              [11, 0,-3,   0.8, '#7f8c8d'],
+              [3,  0, 9,   0.6, '#95a5a6'],
+              [-4, 0,-9,   1.1, '#6d7d8b'],
+            ].map(([x, y, z, s, c], i) => (
+              <mesh key={`lakerock-${i}`} position={[x, 0.15, z]} scale={s} castShadow receiveShadow>
+                <dodecahedronGeometry args={[0.65, 0]} />
+                <meshStandardMaterial color={c} flatShading roughness={0.9} />
+              </mesh>
+            ))}
+
+            {/* Small pebble clusters */}
+            {[
+              [7, 6], [-5, 8.5], [-10, -2], [4, -8], [9, -5],
+            ].map(([x, z], i) => (
+              <group key={`pebbles-${i}`} position={[x, 0.12, z]}>
+                {[0, 0.5, 1, 1.5, 2].map(j => (
+                  <mesh key={j} position={[Math.cos(j * 1.3) * 0.4, 0, Math.sin(j * 1.3) * 0.4]} castShadow>
+                    <sphereGeometry args={[0.12 + Math.random() * 0.1, 5, 5]} />
+                    <meshStandardMaterial color="#9aabb5" flatShading />
+                  </mesh>
+                ))}
+              </group>
+            ))}
+
+            {/* Reed / grass sticks along shore */}
+            {[
+              [9, 3], [7.5, -2], [-9, 3], [-6, 8], [2, 9], [-3, -9],
+            ].map(([x, z], i) => (
+              <group key={`reed-${i}`} position={[x, 0, z]}>
+                <mesh position={[0, 0.7, 0]} castShadow>
+                  <cylinderGeometry args={[0.04, 0.06, 1.4, 5]} />
+                  <meshStandardMaterial color="#6b7c3a" />
+                </mesh>
+                {/* Reed tip */}
+                <mesh position={[0, 1.5, 0]} castShadow>
+                  <cylinderGeometry args={[0.1, 0.04, 0.35, 6]} />
+                  <meshStandardMaterial color="#5a4020" flatShading />
+                </mesh>
+              </group>
+            ))}
+
+            {/* Lily pads on water */}
+            {[
+              [3, 2], [-3, 1], [1, -3], [-2, -2], [5, -1],
+            ].map(([x, z], i) => (
+              <group key={`lily-${i}`} position={[x, 0.11, z]}>
+                {/* Pad */}
+                <mesh rotation={[-Math.PI / 2, 0, Math.random() * Math.PI]}>
+                  <circleGeometry args={[0.45, 12]} />
+                  <meshStandardMaterial color="#2d7a3a" />
+                </mesh>
+                {/* Flower */}
+                <mesh position={[0, 0.05, 0]}>
+                  <sphereGeometry args={[0.12, 6, 6]} />
+                  <meshStandardMaterial color={['#ff69b4','#fff','#ffe4b5','#ff69b4','#fff'][i]} emissive={['#ff69b4','#eee','#ffd700','#ff69b4','#eee'][i]} emissiveIntensity={0.3} />
+                </mesh>
+              </group>
+            ))}
+
+            {/* Trees forming a forest around the lake */}
+            {[
+              [13, -6, 1.4], [13, 6, 1.1], [9, 12, 1.6], [0, 13, 1.2],
+              [-9, 12, 1.5], [-14, 5, 1.3], [-14, -5, 1.7], [-9, -11, 1.2],
+              [0, -12, 1.4], [9, -10, 1.0], [14, 0, 1.5], [11, 10, 0.9],
+            ].map(([x, z, s], i) => (
+              <Tree key={`laketree-${i}`} position={[x, 0, z]} scale={s} />
+            ))}
+
+            {/* Wooden dock / pier */}
+            <group position={[9.5, 0.12, 0]} rotation={[0, Math.PI / 2, 0]}>
+              {/* Planks */}
+              {[0, 0.6, 1.2, 1.8, 2.4].map((z, i) => (
+                <mesh key={`plank-${i}`} position={[0, 0.08, z]} castShadow>
+                  <boxGeometry args={[1.2, 0.08, 0.5]} />
+                  <meshStandardMaterial color="#8B4513" roughness={0.9} />
+                </mesh>
+              ))}
+              {/* Support poles */}
+              {[[-0.5, 0], [0.5, 0], [-0.5, 2.4], [0.5, 2.4]].map(([x, z], i) => (
+                <mesh key={`pole-${i}`} position={[x, -0.3, z]} castShadow>
+                  <cylinderGeometry args={[0.06, 0.06, 0.8, 6]} />
+                  <meshStandardMaterial color="#5a3010" />
+                </mesh>
+              ))}
+            </group>
+
+            {/* Night-time water glow point light */}
+            {isNight && (
+              <pointLight position={[0, 1.5, 0]} color="#1e90ff" intensity={6} distance={18} decay={2} />
+            )}
+          </group>
 
           <Player avatarColor={avatarColor} avatarGender={avatarGender} accessories={accessories} onMove={handlePlayerMove} cameraMode={cameraMode} />
         </Canvas>
