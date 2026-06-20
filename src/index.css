@@ -6,7 +6,7 @@
   --glass-border: rgba(0, 240, 255, 0.3);
   --text-main: #ffffff;
   --text-muted: #a0a0b0;
-  
+
   font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   color-scheme: dark;
   background-color: var(--dark-bg);
@@ -65,6 +65,7 @@ body {
   border: 2px solid var(--primary);
   box-shadow: none;
 }
+
 .glowing-button.outline:hover {
   background: rgba(0, 240, 255, 0.1);
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
@@ -87,16 +88,21 @@ body {
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: 'Space Grotesk', sans-serif;
 }
 
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.3);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 4px;

@@ -113,45 +113,70 @@ export default function AvatarBuilder({ onSave }) {
       exit={{ opacity: 0 }}
       style={{
         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-        display: 'flex', background: 'rgba(5, 5, 16, 0.8)', backdropFilter: 'blur(10px)', zIndex: 10
+        display: 'flex', background: 'transparent', zIndex: 10,
+        overflow: 'hidden'
       }}
     >
+
       {/* Left side: 3D Preview */}
       <div style={{ flex: 1, position: 'relative' }}>
         <Canvas camera={{ position: [0, 2, 5], fov: 50 }}>
           <ambientLight intensity={0.5} />
-          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#00f0ff" />
+          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#ffffff" />
           <AvatarPreview color={activeColor} gender={activeGender} accessories={activeAccessories} />
           <Environment preset="city" />
           <OrbitControls enablePan={false} enableZoom={true} minDistance={2} maxDistance={10} />
         </Canvas>
 
         <div style={{ position: 'absolute', bottom: '2rem', width: '100%', textAlign: 'center', pointerEvents: 'none' }}>
-          <h3 style={{ color: '#00f0ff', letterSpacing: '2px' }}>LIVE PREVIEW</h3>
-          <p style={{ color: '#a0a0b0', fontSize: '0.9rem' }}>Drag to rotate • Scroll to zoom</p>
+          <h3 style={{ color: '#6c5ce7', fontWeight: 800, letterSpacing: '2px' }}>LIVE PREVIEW</h3>
+          <p style={{ color: '#5a627a', fontWeight: 600, fontSize: '0.9rem' }}>Drag to rotate • Scroll to zoom</p>
         </div>
       </div>
 
       {/* Right side: Customization UI */}
-      <div style={{ width: '400px', padding: '2rem', borderLeft: '1px solid rgba(0,240,255,0.2)', background: 'rgba(5, 5, 16, 0.8)', backdropFilter: 'blur(10px)', display: 'flex', flexDirection: 'column' }}>
-        <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>Avatar Builder</h2>
+      <div style={{
+        width: '400px', padding: '2rem',
+        borderRight: '1px solid rgba(255,255,255,0.5)',
+        background: 'rgba(255, 255, 255, 0.45)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        display: 'flex', flexDirection: 'column',
+        boxShadow: '-10px 0 30px rgba(108, 92, 231, 0.04)',
+        color: '#3a3a50',
+        fontFamily: "'Inter', 'Tajawal', sans-serif",
+        zIndex: 5
+      }}>
+        <h2 style={{ fontSize: '2.2rem', fontWeight: 800, marginBottom: '2rem', color: '#3a3a50' }}>Avatar Builder</h2>
 
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '10px' }}>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h4 style={{ marginBottom: '1rem', color: '#a0a0b0' }}>Gender Type</h4>
+            <h4 style={{ marginBottom: '1rem', color: '#5a627a', fontWeight: 800, fontSize: '0.92rem' }}>Gender Type</h4>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button 
-                className="futuristic-input" 
                 onClick={() => setActiveGender('boy')}
-                style={{ flex: 1, textAlign: 'center', cursor: 'pointer', background: activeGender === 'boy' ? 'rgba(0, 240, 255, 0.2)' : 'transparent', borderColor: activeGender === 'boy' ? '#00f0ff' : 'rgba(255,255,255,0.2)' }}
+                style={{
+                  flex: 1, padding: '12px 16px', borderRadius: '12px', textAlign: 'center', cursor: 'pointer',
+                  background: activeGender === 'boy' ? 'rgba(108, 92, 231, 0.1)' : 'rgba(255, 255, 255, 0.45)',
+                  border: activeGender === 'boy' ? '1.5px solid #6c5ce7' : '1px solid rgba(255, 255, 255, 0.75)',
+                  color: activeGender === 'boy' ? '#6c5ce7' : '#5a627a',
+                  fontWeight: 700, transition: 'all 0.2s ease',
+                  fontFamily: 'inherit'
+                }}
               >
                 Boy
               </button>
               <button 
-                className="futuristic-input" 
                 onClick={() => setActiveGender('girl')}
-                style={{ flex: 1, textAlign: 'center', cursor: 'pointer', background: activeGender === 'girl' ? 'rgba(0, 240, 255, 0.2)' : 'transparent', borderColor: activeGender === 'girl' ? '#00f0ff' : 'rgba(255,255,255,0.2)' }}
+                style={{
+                  flex: 1, padding: '12px 16px', borderRadius: '12px', textAlign: 'center', cursor: 'pointer',
+                  background: activeGender === 'girl' ? 'rgba(108, 92, 231, 0.1)' : 'rgba(255, 255, 255, 0.45)',
+                  border: activeGender === 'girl' ? '1.5px solid #6c5ce7' : '1px solid rgba(255, 255, 255, 0.75)',
+                  color: activeGender === 'girl' ? '#6c5ce7' : '#5a627a',
+                  fontWeight: 700, transition: 'all 0.2s ease',
+                  fontFamily: 'inherit'
+                }}
               >
                 Girl
               </button>
@@ -159,17 +184,19 @@ export default function AvatarBuilder({ onSave }) {
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h4 style={{ marginBottom: '1rem', color: '#a0a0b0' }}>Suit Color</h4>
+            <h4 style={{ marginBottom: '1rem', color: '#5a627a', fontWeight: 800, fontSize: '0.92rem' }}>Suit Color</h4>
             <div style={{ display: 'flex', gap: '10px' }}>
               {colors.map(color => (
                 <div
                   key={color}
                   onClick={() => setActiveColor(color)}
                   style={{
-                    width: '40px', height: '40px', borderRadius: '50%',
+                    width: '38px', height: '38px', borderRadius: '50%',
                     background: color, cursor: 'pointer',
-                    border: activeColor === color ? '3px solid white' : 'none',
-                    boxShadow: activeColor === color ? `0 0 15px ${color}` : 'none'
+                    border: activeColor === color ? '3px solid #ffffff' : '1px solid rgba(0,0,0,0.1)',
+                    outline: activeColor === color ? `2.5px solid ${color}` : 'none',
+                    boxShadow: activeColor === color ? `0 4px 12px ${color}44` : 'none',
+                    transition: 'all 0.2s ease'
                   }}
                 />
               ))}
@@ -177,31 +204,55 @@ export default function AvatarBuilder({ onSave }) {
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h4 style={{ marginBottom: '1rem', color: '#a0a0b0' }}>Accessories</h4>
+            <h4 style={{ marginBottom: '1rem', color: '#5a627a', fontWeight: 800, fontSize: '0.92rem' }}>Accessories</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {['VR Headset', 'Jetpack', 'Cyber Wings'].map(acc => (
-                <div 
-                  key={acc} 
-                  className="futuristic-input" 
-                  style={{ 
-                    cursor: 'pointer', 
-                    background: activeAccessories.includes(acc) ? 'rgba(0, 240, 255, 0.1)' : 'transparent', 
-                    borderColor: activeAccessories.includes(acc) ? '#00f0ff' : 'rgba(255,255,255,0.2)',
-                    color: activeAccessories.includes(acc) ? '#00f0ff' : '#fff'
-                  }}
-                  onClick={() => toggleAccessory(acc)}
-                >
-                  {acc}
-                </div>
-              ))}
+              {['VR Headset', 'Jetpack', 'Cyber Wings'].map(acc => {
+                const active = activeAccessories.includes(acc);
+                return (
+                  <div 
+                    key={acc} 
+                    style={{ 
+                      cursor: 'pointer', 
+                      padding: '12px 18px',
+                      borderRadius: '12px',
+                      background: active ? 'rgba(108, 92, 231, 0.1)' : 'rgba(255, 255, 255, 0.45)', 
+                      border: active ? '1.5px solid #6c5ce7' : '1px solid rgba(255, 255, 255, 0.75)',
+                      color: active ? '#6c5ce7' : '#5a627a',
+                      fontWeight: 700,
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                    onClick={() => toggleAccessory(acc)}
+                  >
+                    <span>{acc}</span>
+                    {active && <span style={{ fontSize: '0.95rem' }}>✓</span>}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
         </div>
 
-        <button className="glowing-button" style={{ width: '100%', marginTop: '1rem' }} onClick={() => onSave({ avatarColor: activeColor, avatarGender: activeGender, accessories: activeAccessories })}>
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => onSave({ avatarColor: activeColor, avatarGender: activeGender, accessories: activeAccessories })}
+          style={{ 
+            width: '100%', marginTop: '1.5rem',
+            padding: '14px', borderRadius: '30px',
+            background: 'linear-gradient(135deg, #6c5ce7, #8e7bf3)',
+            border: 'none', color: '#ffffff',
+            fontSize: '1rem', fontWeight: 800,
+            cursor: 'pointer',
+            boxShadow: '0 6px 20px rgba(108, 92, 231, 0.25)',
+            fontFamily: 'inherit'
+          }}
+        >
           Save Character
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

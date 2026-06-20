@@ -3,16 +3,13 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Html, KeyboardControls, useKeyboardControls, Float, Box, Cylinder, Cone, Sphere, PerspectiveCamera, ContactShadows } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
-
 // --- Infinitown Style Details ---
-
 function Cloud({ position, speed, scale = 1 }) {
   const ref = useRef();
   useFrame((state, delta) => {
     ref.current.position.x += speed * delta;
     if (ref.current.position.x > 40) ref.current.position.x = -40;
   });
-
   return (
     <group ref={ref} position={position} scale={scale}>
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
@@ -30,9 +27,6 @@ function Cloud({ position, speed, scale = 1 }) {
     </group>
   );
 }
-
-
-
 function SidewalkBlock({ position, size }) {
   return (
     <mesh position={position} receiveShadow castShadow>
@@ -41,8 +35,8 @@ function SidewalkBlock({ position, size }) {
     </mesh>
   );
 }
-
 function StreetLight({ position, rotation, lightPower = 18 }) {
+  const isGlowing = lightPower > 0;
   return (
     <group position={position} rotation={rotation}>
       {/* Pole */}
@@ -61,9 +55,15 @@ function StreetLight({ position, rotation, lightPower = 18 }) {
         <meshStandardMaterial color="#222" metalness={0.6} roughness={0.3} />
       </mesh>
       {/* Light Bulb (glowing) */}
+      {/* Light Bulb (glowing only when on) */}
       <mesh position={[-0.7, 2.82, 0]}>
         <boxGeometry args={[0.18, 0.07, 0.1]} />
         <meshStandardMaterial color="#ffe8a0" emissive="#ffe8a0" emissiveIntensity={3} />
+        <meshStandardMaterial
+          color={isGlowing ? '#ffe8a0' : '#444'}
+          emissive={isGlowing ? '#ffe8a0' : '#000'}
+          emissiveIntensity={isGlowing ? 3 : 0}
+        />
       </mesh>
       {/* Cone glow effect pointing down */}
       <mesh position={[-0.7, 2.3, 0]} rotation={[Math.PI, 0, 0]}>
@@ -79,10 +79,16 @@ function StreetLight({ position, rotation, lightPower = 18 }) {
         decay={2}
         castShadow={false}
       />
+      {/* Cone glow effect pointing down - visible only at night */}
+      {isGlowing && (
+        <mesh position={[-0.7, 2.3, 0]} rotation={[Math.PI, 0, 0]}>
+          <coneGeometry args={[0.7, 1.2, 16, 1, true]} />
+          <meshBasicMaterial color="#ffe8a0" transparent opacity={0.07} side={2} />
+        </mesh>
+      )}
     </group>
   );
 }
-
 function Rock({ position, scale = 1 }) {
   return (
     <mesh position={position} scale={scale} castShadow receiveShadow>
@@ -91,7 +97,6 @@ function Rock({ position, scale = 1 }) {
     </mesh>
   );
 }
-
 function Bush({ position, scale = 1 }) {
   return (
     <mesh position={position} scale={scale} castShadow receiveShadow>
@@ -100,7 +105,6 @@ function Bush({ position, scale = 1 }) {
     </mesh>
   );
 }
-
 // ── Professional Mountain ────────────────────────────────────────────────────
 // Each mountain is 6 overlapping cones: base skirt → main body → shoulder →
 // upper face → sharp tip → snow.  Rotate Y randomly for silhouette variety.
@@ -149,7 +153,6 @@ function Mountain({ position, scale = 1, rotY = 0, snow = true }) {
     </group>
   );
 }
-
 // Low-poly Tree
 function Tree({ position, scale = 1 }) {
   return (
@@ -165,11 +168,9 @@ function Tree({ position, scale = 1 }) {
     </group>
   );
 }
-
 // Detailed Low-poly Building Component
 function Building({ position, color, size, title, topics, difficulty, onClick, type }) {
   const [hovered, setHovered] = useState(false);
-
   const renderShape = () => {
     switch (type) {
       case 'algebra':
@@ -354,10 +355,155 @@ function Building({ position, color, size, title, topics, difficulty, onClick, t
             </Float>
           </group>
         );
+      case 'skyport':
+        return (
+          <group position={[0, 0.1, 0]}>
+            {/* === Circular Launch Platform === */}
+            <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[4, 4.3, 0.6, 24]} />
+              <meshStandardMaterial color="#1a2a3a" flatShading roughness={0.6} metalness={0.3} />
+            </mesh>
+            {/* Platform top surface */}
+            <mesh position={[0, 0.62, 0]} receiveShadow>
+              <cylinderGeometry args={[3.8, 3.8, 0.05, 24]} />
+              <meshStandardMaterial color="#2a3a4a" roughness={0.4} metalness={0.4} />
+            </mesh>
+            {/* Outer neon ring */}
+            <mesh position={[0, 0.66, 0]} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[3.9, 0.07, 8, 32]} />
+              <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={hovered ? 2 : 1} />
+            </mesh>
+            {/* Inner neon ring */}
+            <mesh position={[0, 0.66, 0]} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[2, 0.05, 8, 24]} />
+              <meshStandardMaterial color="#0088ff" emissive="#0088ff" emissiveIntensity={hovered ? 1.5 : 0.6} />
+            </mesh>
+            {/* Landing pad cross markings */}
+            <mesh position={[0, 0.66, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[4.5, 0.12]} />
+              <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={0.6} />
+            </mesh>
+            <mesh position={[0, 0.66, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+              <planeGeometry args={[4.5, 0.12]} />
+              <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={0.6} />
+            </mesh>
+            {/* Platform edge lights */}
+            {Array.from({ length: 8 }, (_, i) => {
+              const a = (i / 8) * Math.PI * 2;
+              return (
+                <mesh key={`pl-${i}`} position={[Math.cos(a) * 4, 0.75, Math.sin(a) * 4]}>
+                  <sphereGeometry args={[0.1, 6, 6]} />
+                  <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={hovered ? 2 : 1} />
+                </mesh>
+              );
+            })}
+            {/* === Compact Control Tower === */}
+            <group position={[3.2, 0, 2.5]}>
+              {/* Tower base */}
+              <mesh position={[0, 1, 0]} castShadow receiveShadow>
+                <boxGeometry args={[1, 2, 1]} />
+                <meshStandardMaterial color="#1e2d3d" flatShading />
+              </mesh>
+              {/* Tower cabin */}
+              <mesh position={[0, 2.3, 0]} castShadow receiveShadow>
+                <boxGeometry args={[1.2, 0.6, 1.2]} />
+                <meshStandardMaterial color="#2c3e50" flatShading />
+              </mesh>
+              {/* Window slits */}
+              {[0, Math.PI / 2, Math.PI, Math.PI * 1.5].map((a, i) => (
+                <mesh key={`tw-${i}`} position={[Math.cos(a) * 0.61, 2.3, Math.sin(a) * 0.61]} rotation={[0, -a, 0]}>
+                  <boxGeometry args={[0.5, 0.25, 0.05]} />
+                  <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={hovered ? 1.5 : 0.7} />
+                </mesh>
+              ))}
+              {/* Antenna */}
+              <mesh position={[0, 2.9, 0]} castShadow>
+                <cylinderGeometry args={[0.03, 0.03, 0.8, 6]} />
+                <meshStandardMaterial color="#95a5a6" />
+              </mesh>
+              {/* Antenna tip light */}
+              <mesh position={[0, 3.35, 0]}>
+                <sphereGeometry args={[0.07, 6, 6]} />
+                <meshStandardMaterial color="#ff3333" emissive="#ff3333" emissiveIntensity={2} />
+              </mesh>
+            </group>
+            {/* === Energy Beam with Opacity Falloff === */}
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <mesh key={`beam-${i}`} position={[0, 1.5 + i * 4, 0]}>
+                <cylinderGeometry args={[0.3 - i * 0.03, 0.35 - i * 0.03, 4, 8]} />
+                <meshStandardMaterial
+                  color="#00c8ff" emissive="#00c8ff"
+                  emissiveIntensity={1.5 - i * 0.2}
+                  transparent opacity={0.4 - i * 0.06}
+                />
+              </mesh>
+            ))}
+            {/* Beam bright core */}
+            {[0, 1, 2, 3].map((i) => (
+              <mesh key={`core-${i}`} position={[0, 1.5 + i * 5, 0]}>
+                <cylinderGeometry args={[0.08, 0.1, 5, 6]} />
+                <meshStandardMaterial
+                  color="#ffffff" emissive="#00f0ff"
+                  emissiveIntensity={2 - i * 0.4}
+                  transparent opacity={0.35 - i * 0.08}
+                />
+              </mesh>
+            ))}
+            {/* === Floating Sky Island (~35% scale) === */}
+            <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.6}>
+              <group position={[0, 28, 0]}>
+                {/* Rocky underside */}
+                <mesh position={[0, -0.8, 0]} castShadow>
+                  <coneGeometry args={[2.2, 2.5, 7]} />
+                  <meshStandardMaterial color="#4a3a2a" flatShading roughness={0.9} />
+                </mesh>
+                <mesh position={[0.4, -0.3, 0.3]} castShadow>
+                  <coneGeometry args={[1, 1.2, 5]} />
+                  <meshStandardMaterial color="#5a4a3a" flatShading roughness={0.9} />
+                </mesh>
+                {/* Top surface */}
+                <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+                  <cylinderGeometry args={[2.5, 2.2, 0.8, 8]} />
+                  <meshStandardMaterial color="#3a7a3a" flatShading />
+                </mesh>
+                {/* Grass layer */}
+                <mesh position={[0, 0.82, 0]} receiveShadow>
+                  <cylinderGeometry args={[2.3, 2.4, 0.06, 8]} />
+                  <meshStandardMaterial color="#4caf50" flatShading />
+                </mesh>
+                {/* Mini trees */}
+                {[[-0.7, 0.5], [0.9, -0.4], [-0.2, -0.9]].map(([x, z], i) => (
+                  <group key={`it-${i}`} position={[x, 0.85, z]}>
+                    <mesh castShadow>
+                      <cylinderGeometry args={[0.05, 0.07, 0.3, 4]} />
+                      <meshStandardMaterial color="#8B4513" flatShading />
+                    </mesh>
+                    <mesh position={[0, 0.3, 0]} castShadow>
+                      <coneGeometry args={[0.28, 0.55, 5]} />
+                      <meshStandardMaterial color="#2d8a4e" flatShading />
+                    </mesh>
+                  </group>
+                ))}
+                {/* Aura ring */}
+                <mesh position={[0, 0.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                  <torusGeometry args={[2.8, 0.04, 8, 24]} />
+                  <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={0.4} transparent opacity={0.25} />
+                </mesh>
+              </group>
+            </Float>
+            {/* === Orbiting Drones === */}
+            <OrbitingDrones radius={5} count={4} speed={0.3} height={3.5} />
+          </group>
+        );
       default:
         return <mesh position={[0, size[1] / 2 + 0.1, 0]} castShadow receiveShadow><boxGeometry args={size} /><meshStandardMaterial color={color} flatShading /></mesh>;
     }
   };
+  const isSkyport = type === 'skyport';
+  const hitboxY = isSkyport ? 2 : size[1] / 2;
+  const hitboxSize = isSkyport ? [10, 5, 10] : [size[0] + 1, size[1] + 2, size[2] + 1];
+  const indicatorY = isSkyport ? 5 : size[1] + 2;
+  const hoverLabelY = isSkyport ? 6.5 : size[1] + 3.5;
 
   return (
     <group position={position}>
@@ -365,29 +511,25 @@ function Building({ position, color, size, title, topics, difficulty, onClick, t
       <mesh
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={(e) => { e.stopPropagation(); setHovered(false); document.body.style.cursor = 'auto'; }}
-        onClick={(e) => { e.stopPropagation(); onClick({ title, topics, difficulty, color }); }}
-        position={[0, size[1] / 2, 0]}
+        onClick={(e) => { e.stopPropagation(); onClick({ title, topics, difficulty, color, type }); }}
+        position={[0, hitboxY, 0]}
         visible={false}
       >
-        <boxGeometry args={[size[0] + 1, size[1] + 2, size[2] + 1]} />
+        <boxGeometry args={hitboxSize} />
         <meshBasicMaterial />
       </mesh>
-
       {/* Sidewalk base for the building */}
       <SidewalkBlock position={[0, 0.1, 0]} size={[size[0] + 2, 0.2, size[2] + 2]} />
-
       {renderShape()}
-
       {/* Floating Indicator */}
-      <Float speed={2} rotationIntensity={1} floatIntensity={1} position={[0, size[1] + 2, 0]}>
+      <Float speed={2} rotationIntensity={1} floatIntensity={1} position={[0, indicatorY, 0]}>
         <mesh castShadow>
           <octahedronGeometry args={[0.5, 0]} />
           <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1} flatShading />
         </mesh>
       </Float>
-
       {hovered && (
-        <Html position={[0, size[1] + 3.5, 0]} center zIndexRange={[100, 0]}>
+        <Html position={[0, hoverLabelY, 0]} center zIndexRange={[100, 0]}>
           <div style={{
             background: 'rgba(255, 255, 255, 0.95)',
             padding: '10px 16px',
@@ -409,7 +551,6 @@ function Building({ position, color, size, title, topics, difficulty, onClick, t
     </group>
   );
 }
-
 // Decorative Building Component (No interactions)
 function DecoBuilding({ position, color, size, type = 'box' }) {
   return (
@@ -429,7 +570,43 @@ function DecoBuilding({ position, color, size, type = 'box' }) {
     </group>
   );
 }
-
+// Orbiting Hover Drones — lightweight animated component
+function OrbitingDrones({ radius = 5, count = 4, speed = 0.3, height = 3.5 }) {
+  const groupRef = useRef();
+  useFrame((_, delta) => {
+    if (groupRef.current) groupRef.current.rotation.y += speed * delta;
+  });
+  return (
+    <group ref={groupRef}>
+      {Array.from({ length: count }, (_, i) => {
+        const angle = (i / count) * Math.PI * 2;
+        return (
+          <Float key={i} speed={2 + i * 0.5} floatIntensity={0.3}>
+            <group position={[Math.cos(angle) * radius, height + Math.sin(i * 1.5) * 0.4, Math.sin(angle) * radius]}>
+              {/* Drone body */}
+              <mesh castShadow>
+                <boxGeometry args={[0.3, 0.1, 0.3]} />
+                <meshStandardMaterial color="#2c3e50" metalness={0.6} roughness={0.3} />
+              </mesh>
+              {/* Rotor discs */}
+              {[[-0.2, 0.07, -0.2], [0.2, 0.07, -0.2], [-0.2, 0.07, 0.2], [0.2, 0.07, 0.2]].map(([dx, dy, dz], j) => (
+                <mesh key={j} position={[dx, dy, dz]}>
+                  <cylinderGeometry args={[0.1, 0.1, 0.02, 6]} />
+                  <meshStandardMaterial color="#00c8ff" emissive="#00c8ff" emissiveIntensity={0.5} transparent opacity={0.6} />
+                </mesh>
+              ))}
+              {/* Bottom indicator light */}
+              <mesh position={[0, -0.07, 0]}>
+                <sphereGeometry args={[0.035, 6, 6]} />
+                <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2} />
+              </mesh>
+            </group>
+          </Float>
+        );
+      })}
+    </group>
+  );
+}
 // Box colliders — buildings & deco structures
 const BUILDINGS_BOUNDS = [
   // Algebra Tower [-14, -14]
@@ -453,53 +630,46 @@ const BUILDINGS_BOUNDS = [
   // Deco Buildings
   { x: [-45 - 4, -45 + 4], z: [-35 - 4, -35 + 4] },
   { x: [45 - 4, 45 + 4], z: [-35 - 4, -35 + 4] },
-  { x: [-45 - 4, -45 + 4], z: [38 - 4, 38 + 4] },
+  // Note: Skyport [-45, 38] has NO collision box — player can walk onto the platform
   { x: [45 - 4, 45 + 4], z: [38 - 4, 38 + 4] },
   { x: [12 - 4, 12 + 4], z: [-50 - 4, -50 + 4] },
   { x: [12 - 4, 12 + 4], z: [52 - 4, 52 + 4] }
 ];
-
 // Circular colliders — trees, rocks, roundabout pillars  [cx, cz, radius]
 const CIRCLE_BOUNDS = [
   // ── Inner city trees (around intersection) ──
   [-8, -8, 0.9], [-6, -10, 0.7], [8, -8, 1.1], [10, -6, 0.8],
   [-10, 8, 1.0], [-8, 10, 0.7], [10, 8, 0.9], [8, 10, 1.1],
-
   // ── Trees near buildings ──
   [-24, 4, 0.9], [-32, -3, 0.7], [24, -4, 1.0], [32, 3, 0.7],
   [-10, 26, 0.8], [10, 32, 0.9], [18, 24, 0.6], [-18, 32, 1.1],
-
   // ── Outer world trees ──
   [-50, 15, 1.2], [-55, -15, 1.0], [50, -15, 1.2], [55, 18, 0.9],
   [-40, -35, 1.4], [40, 35, 1.1], [-60, 30, 1.0], [60, -30, 1.3],
   [0, 50, 1.2], [0, -50, 1.0], [-35, 50, 0.8], [35, -50, 1.3],
   [-70, 0, 1.6], [70, 0, 1.5], [45, 45, 1.0], [-45, -45, 1.2],
   [-65, 40, 0.9], [65, -40, 1.1],
-
   // ── Street lights – South side of horizontal road (z ≈ -4.5) ──
   [-10, -4.5, 0.3], [-20, -4.5, 0.3], [10, -4.5, 0.3], [20, -4.5, 0.3],
   [-30, -4.5, 0.3], [-40, -4.5, 0.3], [30, -4.5, 0.3], [40, -4.5, 0.3],
   [-50, -4.5, 0.3], [50, -4.5, 0.3],
-
   // ── Street lights – North side of horizontal road (z ≈ 4.5) ──
   [-10, 4.5, 0.3], [-20, 4.5, 0.3], [10, 4.5, 0.3], [20, 4.5, 0.3],
   [-30, 4.5, 0.3], [-40, 4.5, 0.3], [30, 4.5, 0.3], [40, 4.5, 0.3],
   [-50, 4.5, 0.3], [50, 4.5, 0.3],
-
   // ── Street lights – West side of vertical road (x ≈ -4.5) ──
   [-4.5, -10, 0.3], [-4.5, -20, 0.3], [-4.5, 10, 0.3], [-4.5, 20, 0.3],
   [-4.5, -30, 0.3], [-4.5, -40, 0.3], [-4.5, 30, 0.3], [-4.5, 40, 0.3],
   [-4.5, 50, 0.3],
-
   // ── Street lights – East side of vertical road (x ≈ 4.5) ──
   [4.5, -10, 0.3], [4.5, -20, 0.3], [4.5, 10, 0.3], [4.5, 20, 0.3],
   [4.5, -30, 0.3], [4.5, -40, 0.3], [4.5, 30, 0.3], [4.5, 40, 0.3],
   [4.5, 50, 0.3],
+  // ── Sky Port Control Tower ──
+  [-41.8, 40.5, 0.7],
 ];
-
 function checkCollision(newX, newZ) {
   const playerRadius = 0.5;
-
   // Box colliders (buildings)
   for (let box of BUILDINGS_BOUNDS) {
     if (
@@ -511,7 +681,6 @@ function checkCollision(newX, newZ) {
       return true;
     }
   }
-
   // Circle colliders (trees, rocks, pillars)
   for (let [cx, cz, r] of CIRCLE_BOUNDS) {
     const dx = newX - cx;
@@ -520,46 +689,61 @@ function checkCollision(newX, newZ) {
       return true;
     }
   }
-
   return false;
 }
-
 // Player Controller
-function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMode }) {
+function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMode, spawnPosition, currentStage }) {
   const playerRef = useRef();
   const [, getKeys] = useKeyboardControls();
-  const speed = 8;
-  const rotationSpeed = 3.5;
-
+  const speed = 11;
+  const rotationSpeed = 3.8;
+  
   useFrame((state, delta) => {
     const keys = getKeys();
     if (!playerRef.current) return;
-
-    // Third-Person Movement Controls
+    
+    // Welcome stage: orbital camera + no movement
+    if (currentStage === 'welcome') {
+      // Orbital camera around the city center
+      const orbitRadius = 65;
+      const orbitHeight = 45;
+      const orbitSpeed = 0.15; // radians per second for slow rotation
+      
+      // Calculate current angle based on time
+      const angle = state.clock.getElapsedTime() * orbitSpeed;
+      const camX = Math.cos(angle) * orbitRadius;
+      const camZ = Math.sin(angle) * orbitRadius;
+      
+      // Set camera position
+      state.camera.position.set(camX, orbitHeight, camZ);
+      
+      // Look at center of city (slightly up)
+      state.camera.lookAt(0, 5, 0);
+      
+      // Keep player at spawn for welcome stage
+      playerRef.current.position.set(0, 0.2, 8);
+      return; // Skip all other logic
+    }
+    
+    // Third-Person Movement Controls (only when NOT in welcome stage)
     let moveZ = 0;
     let rotateY = 0;
-
     if (keys.forward) moveZ = 1;
     if (keys.backward) moveZ = -1;
     if (keys.left) rotateY = 1;
     if (keys.right) rotateY = -1;
-
     // Apply Rotation (A/D to turn)
     if (rotateY !== 0) {
       playerRef.current.rotation.y += rotateY * rotationSpeed * delta;
     }
-
     // Apply Translation (W/S to move forward/backward)
     if (moveZ !== 0) {
       const direction = new THREE.Vector3(0, 0, moveZ);
       direction.applyQuaternion(playerRef.current.quaternion);
-
       const newPos = playerRef.current.position.clone().addScaledVector(direction, speed * delta);
-
       // Clamp to city bounds first
       newPos.x = Math.max(-95, Math.min(95, newPos.x));
       newPos.z = Math.max(-95, Math.min(95, newPos.z));
-
       // Apply sliding collision
       if (!checkCollision(newPos.x, playerRef.current.position.z)) {
         playerRef.current.position.x = newPos.x;
@@ -569,12 +753,19 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
       }
       if (onMove) onMove(playerRef.current.position.x, playerRef.current.position.z);
     }
-
+    // Dynamic Y adjustment (climbing onto Sky Port platform)
+    const dx = playerRef.current.position.x - (-45);
+    const dz = playerRef.current.position.z - 38;
+    const distSq = dx * dx + dz * dz;
+    let targetY = 0.2;
+    if (distSq < 36) {  // radius 6 — covers full platform + sidewalk area
+      targetY = 0.75;   // platform top surface height
+    }
+    playerRef.current.position.y = THREE.MathUtils.lerp(playerRef.current.position.y, targetY, 0.15);
     // Smooth Camera Transition (Follow vs Top-Down)
     if (cameraMode === 'topdown') {
       const cameraTargetPos = playerRef.current.position.clone().add(new THREE.Vector3(0, 45, -15));
       state.camera.position.lerp(cameraTargetPos, 0.05);
-
       // Look at the player but slightly offset to center the city context
       const lookAtPos = playerRef.current.position.clone();
       state.camera.lookAt(lookAtPos);
@@ -582,17 +773,14 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
       const cameraOffset = new THREE.Vector3(0, 3.5, -7); // Camera sits behind and above
       cameraOffset.applyQuaternion(playerRef.current.quaternion);
       const cameraTargetPos = playerRef.current.position.clone().add(cameraOffset);
-
       state.camera.position.lerp(cameraTargetPos, 0.1);
-
       // Look slightly above the player's head
       const lookAtPos = playerRef.current.position.clone().add(new THREE.Vector3(0, 1.5, 0));
       state.camera.lookAt(lookAtPos);
     }
   });
-
   return (
-    <group ref={playerRef} position={[0, 0.2, 8]}>
+    <group ref={playerRef} position={spawnPosition || [0, 0.2, 8]}>
       {/* Body */}
       {avatarGender === 'girl' ? (
         <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
@@ -605,13 +793,11 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
           <meshStandardMaterial color={avatarColor || "#00f0ff"} flatShading />
         </mesh>
       )}
-
       {/* Head */}
       <mesh position={[0, 1.4, 0]} castShadow receiveShadow>
         <sphereGeometry args={[0.35, 8, 8]} />
         <meshStandardMaterial color="#ffffff" flatShading />
       </mesh>
-
       {/* Hair / Visor */}
       {avatarGender === 'girl' ? (
         <mesh position={[0, 1.3, -0.3]} rotation={[-Math.PI / 4, 0, 0]} castShadow>
@@ -624,8 +810,6 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
           <meshStandardMaterial color="#111" emissive="#00f0ff" emissiveIntensity={0.5} />
         </mesh>
       )}
-
-
       {/* Backpack / Default Jetpack if no Jetpack equipped? Let's just remove the default backpack to let Jetpack shine */}
       {!accessories.includes('Jetpack') && (
         <mesh position={[0, 0.9, -0.3]} castShadow>
@@ -633,7 +817,6 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
           <meshStandardMaterial color="#333" />
         </mesh>
       )}
-
       {/* Accessories */}
       {accessories.includes('VR Headset') && (
         <mesh position={[0, 1.4, 0.45]} castShadow>
@@ -658,11 +841,9 @@ function Player({ avatarColor, avatarGender, accessories = [], onMove, cameraMod
     </group>
   );
 }
-
-export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGender, accessories, cameraMode, isNight }) {
+export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGender, accessories, cameraMode, isNight, spawnPosition, currentStage }) {
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const mapMarkerRef = useRef(null);
-
   const handlePlayerMove = (x, z) => {
     if (mapMarkerRef.current) {
       // World is 200x200 (-100 to 100), map to 0%-100%
@@ -672,35 +853,30 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
       mapMarkerRef.current.style.top = `${top}%`;
     }
   };
-
   const keyboardMap = useMemo(() => [
     { name: 'forward', keys: ['ArrowUp', 'KeyW', 'w'] },
     { name: 'backward', keys: ['ArrowDown', 'KeyS', 's'] },
     { name: 'left', keys: ['ArrowLeft', 'KeyA', 'a'] },
     { name: 'right', keys: ['ArrowRight', 'KeyD', 'd'] },
   ], []);
-
   // ── Day / Night scene values ──────────────────────────────────────
-  const skyColor    = isNight ? '#05060f' : '#a0d8ef';
-  const fogColor    = isNight ? '#05060f' : '#a0d8ef';
-  const fogNear     = isNight ? 30 : 40;
-  const fogFar      = isNight ? 120 : 150;
-  const ambInt      = isNight ? 0.04 : 0.6;
-  const ambColor    = isNight ? '#2020ff' : '#ffffff';
-  const sunInt      = isNight ? 0.08 : 1.2;
-  const sunPos      = isNight ? [-15, 8, 5] : [15, 30, -5];   // moon low on horizon
-  const grassColor  = isNight ? '#1a3a1a' : '#4caf50';
-  const lampPower   = isNight ? 22 : 0;   // lamps off during day
-
+  const skyColor = isNight ? '#05060f' : '#a0d8ef';
+  const fogColor = isNight ? '#05060f' : '#a0d8ef';
+  const fogNear = isNight ? 30 : 40;
+  const fogFar = isNight ? 120 : 150;
+  const ambInt = isNight ? 0.04 : 0.6;
+  const ambColor = isNight ? '#2020ff' : '#ffffff';
+  const sunInt = isNight ? 0.08 : 1.2;
+  const sunPos = isNight ? [-15, 8, 5] : [15, 30, -5];   // moon low on horizon
+  const grassColor = isNight ? '#1a3a1a' : '#4caf50';
+  const lampPower = isNight ? 22 : 0;   // lamps off during day
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, background: skyColor, transition: 'background 2s ease' }}>
       <KeyboardControls map={keyboardMap}>
         <Canvas shadows>
           <PerspectiveCamera makeDefault position={[0, 5, -10]} fov={60} near={0.1} far={1000} />
-
           <color attach="background" args={[skyColor]} />
           <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
-
           <ambientLight intensity={ambInt} color={ambColor} />
           <directionalLight
             position={sunPos}
@@ -713,14 +889,13 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             shadow-camera-bottom={-60}
             shadow-bias={-0.0001}
           />
-
           {/* Stars — visible only at night */}
           {isNight && (
             <group>
               {Array.from({ length: 200 }, (_, i) => {
                 const theta = Math.random() * Math.PI * 2;
-                const phi   = Math.random() * Math.PI * 0.5; // upper hemisphere only
-                const r     = 160 + Math.random() * 20;
+                const phi = Math.random() * Math.PI * 0.5; // upper hemisphere only
+                const r = 160 + Math.random() * 20;
                 return (
                   <mesh key={`star-${i}`}
                     position={[
@@ -739,81 +914,119 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 <sphereGeometry args={[6, 16, 16]} />
                 <meshBasicMaterial color="#e8e0c8" />
               </mesh>
+              {/* 5 Broad crossing point lights at night for optimal performance */}
+              <pointLight position={[0, 4.5, 0]} color="#ffe8a0" intensity={25} distance={25} decay={1.5} />
+              <pointLight position={[-30, 4.5, 0]} color="#ffe8a0" intensity={22} distance={25} decay={1.5} />
+              <pointLight position={[30, 4.5, 0]} color="#ffe8a0" intensity={22} distance={25} decay={1.5} />
+              <pointLight position={[0, 4.5, 30]} color="#ffe8a0" intensity={22} distance={25} decay={1.5} />
+              <pointLight position={[0, 4.5, -30]} color="#ffe8a0" intensity={22} distance={25} decay={1.5} />
             </group>
           )}
-
           {/* Main Ground (Grass) */}
           <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[200, 200]} />
             <meshStandardMaterial color={grassColor} roughness={1} />
           </mesh>
-
           {/* ====== Professional Mountain Ranges ====== */}
           <group>
             {/* ── North range (z ≈ -88 → -115) ─────────────────────── */}
             {/* Front row */}
-            <Mountain position={[-72, 0, -90]}  scale={1.1} rotY={0.3}  snow={true}  />
-            <Mountain position={[-44, 0, -96]}  scale={1.4} rotY={-0.5} snow={true}  />
-            <Mountain position={[-18, 0, -88]}  scale={0.9} rotY={1.1}  snow={false} />
-            <Mountain position={[  2, 0, -102]} scale={1.6} rotY={0.2}  snow={true}  />
-            <Mountain position={[ 26, 0, -91]}  scale={1.2} rotY={-0.8} snow={true}  />
-            <Mountain position={[ 50, 0, -88]}  scale={1.0} rotY={0.6}  snow={false} />
-            <Mountain position={[ 74, 0, -96]}  scale={1.35} rotY={-0.3} snow={true} />
+            <Mountain position={[-72, 0, -90]} scale={1.1} rotY={0.3} snow={true} />
+            <Mountain position={[-44, 0, -96]} scale={1.4} rotY={-0.5} snow={true} />
+            <Mountain position={[-18, 0, -88]} scale={0.9} rotY={1.1} snow={false} />
+            <Mountain position={[2, 0, -102]} scale={1.6} rotY={0.2} snow={true} />
+            <Mountain position={[26, 0, -91]} scale={1.2} rotY={-0.8} snow={true} />
+            <Mountain position={[50, 0, -88]} scale={1.0} rotY={0.6} snow={false} />
+            <Mountain position={[74, 0, -96]} scale={1.35} rotY={-0.3} snow={true} />
+            <Mountain position={[-72, 0, -90]} scale={1.1} rotY={0.3} snow={true} />
+            <Mountain position={[-44, 0, -96]} scale={1.4} rotY={-0.5} snow={true} />
+            <Mountain position={[-18, 0, -88]} scale={0.9} rotY={1.1} snow={false} />
+            <Mountain position={[2, 0, -102]} scale={1.6} rotY={0.2} snow={true} />
+            <Mountain position={[26, 0, -91]} scale={1.2} rotY={-0.8} snow={true} />
+            <Mountain position={[50, 0, -88]} scale={1.0} rotY={0.6} snow={false} />
+            <Mountain position={[74, 0, -96]} scale={1.35} rotY={-0.3} snow={true} />
             {/* Back layer */}
-            <Mountain position={[-58, 0, -113]} scale={0.6}  rotY={0.9}  snow={false} />
-            <Mountain position={[ -8, 0, -110]} scale={0.65} rotY={-0.4} snow={false} />
-            <Mountain position={[ 35, 0, -111]} scale={0.55} rotY={0.7}  snow={false} />
-            <Mountain position={[ 68, 0, -112]} scale={0.62} rotY={-0.9} snow={false} />
-
+            <Mountain position={[-58, 0, -113]} scale={0.6} rotY={0.9} snow={false} />
+            <Mountain position={[-8, 0, -110]} scale={0.65} rotY={-0.4} snow={false} />
+            <Mountain position={[35, 0, -111]} scale={0.55} rotY={0.7} snow={false} />
+            <Mountain position={[68, 0, -112]} scale={0.62} rotY={-0.9} snow={false} />
+            <Mountain position={[-58, 0, -113]} scale={0.6} rotY={0.9} snow={false} />
+            <Mountain position={[-8, 0, -110]} scale={0.65} rotY={-0.4} snow={false} />
+            <Mountain position={[35, 0, -111]} scale={0.55} rotY={0.7} snow={false} />
+            <Mountain position={[68, 0, -112]} scale={0.62} rotY={-0.9} snow={false} />
             {/* ── South range (z ≈ 88 → 115) ──────────────────────── */}
-            <Mountain position={[-74, 0,  92]}  scale={1.15} rotY={-0.4} snow={true}  />
-            <Mountain position={[-46, 0,  88]}  scale={0.95} rotY={0.8}  snow={false} />
-            <Mountain position={[-18, 0,  98]}  scale={1.5}  rotY={-0.2} snow={true}  />
-            <Mountain position={[  6, 0,  90]}  scale={1.1}  rotY={1.0}  snow={false} />
-            <Mountain position={[ 32, 0,  96]}  scale={1.3}  rotY={-0.6} snow={true}  />
-            <Mountain position={[ 58, 0,  90]}  scale={0.9}  rotY={0.4}  snow={false} />
-            <Mountain position={[ 80, 0,  99]}  scale={1.25} rotY={-1.2} snow={true}  />
+            <Mountain position={[-74, 0, 92]} scale={1.15} rotY={-0.4} snow={true} />
+            <Mountain position={[-46, 0, 88]} scale={0.95} rotY={0.8} snow={false} />
+            <Mountain position={[-18, 0, 98]} scale={1.5} rotY={-0.2} snow={true} />
+            <Mountain position={[6, 0, 90]} scale={1.1} rotY={1.0} snow={false} />
+            <Mountain position={[32, 0, 96]} scale={1.3} rotY={-0.6} snow={true} />
+            <Mountain position={[58, 0, 90]} scale={0.9} rotY={0.4} snow={false} />
+            <Mountain position={[80, 0, 99]} scale={1.25} rotY={-1.2} snow={true} />
+            <Mountain position={[-74, 0, 92]} scale={1.15} rotY={-0.4} snow={true} />
+            <Mountain position={[-46, 0, 88]} scale={0.95} rotY={0.8} snow={false} />
+            <Mountain position={[-18, 0, 98]} scale={1.5} rotY={-0.2} snow={true} />
+            <Mountain position={[6, 0, 90]} scale={1.1} rotY={1.0} snow={false} />
+            <Mountain position={[32, 0, 96]} scale={1.3} rotY={-0.6} snow={true} />
+            <Mountain position={[58, 0, 90]} scale={0.9} rotY={0.4} snow={false} />
+            <Mountain position={[80, 0, 99]} scale={1.25} rotY={-1.2} snow={true} />
             {/* Back layer */}
-            <Mountain position={[-38, 0, 112]}  scale={0.6}  rotY={0.5}  snow={false} />
-            <Mountain position={[ 14, 0, 113]}  scale={0.7}  rotY={-0.7} snow={false} />
-            <Mountain position={[ 58, 0, 110]}  scale={0.58} rotY={0.3}  snow={false} />
-
+            <Mountain position={[-38, 0, 112]} scale={0.6} rotY={0.5} snow={false} />
+            <Mountain position={[14, 0, 113]} scale={0.7} rotY={-0.7} snow={false} />
+            <Mountain position={[58, 0, 110]} scale={0.58} rotY={0.3} snow={false} />
+            <Mountain position={[-38, 0, 112]} scale={0.6} rotY={0.5} snow={false} />
+            <Mountain position={[14, 0, 113]} scale={0.7} rotY={-0.7} snow={false} />
+            <Mountain position={[58, 0, 110]} scale={0.58} rotY={0.3} snow={false} />
             {/* ── West range (x ≈ -88 → -115) ─────────────────────── */}
-            <Mountain position={[-90, 0, -62]}  scale={1.2}  rotY={1.5}  snow={true}  />
-            <Mountain position={[-88, 0, -32]}  scale={0.95} rotY={2.2}  snow={false} />
-            <Mountain position={[-98, 0,   0]}  scale={1.55} rotY={1.8}  snow={true}  />
-            <Mountain position={[-90, 0,  30]}  scale={1.1}  rotY={2.6}  snow={true}  />
-            <Mountain position={[-95, 0,  62]}  scale={1.3}  rotY={1.3}  snow={false} />
+            <Mountain position={[-90, 0, -62]} scale={1.2} rotY={1.5} snow={true} />
+            <Mountain position={[-88, 0, -32]} scale={0.95} rotY={2.2} snow={false} />
+            <Mountain position={[-98, 0, 0]} scale={1.55} rotY={1.8} snow={true} />
+            <Mountain position={[-90, 0, 30]} scale={1.1} rotY={2.6} snow={true} />
+            <Mountain position={[-95, 0, 62]} scale={1.3} rotY={1.3} snow={false} />
+            <Mountain position={[-90, 0, -62]} scale={1.2} rotY={1.5} snow={true} />
+            <Mountain position={[-88, 0, -32]} scale={0.95} rotY={2.2} snow={false} />
+            <Mountain position={[-98, 0, 0]} scale={1.55} rotY={1.8} snow={true} />
+            <Mountain position={[-90, 0, 30]} scale={1.1} rotY={2.6} snow={true} />
+            <Mountain position={[-95, 0, 62]} scale={1.3} rotY={1.3} snow={false} />
             {/* Back layer */}
-            <Mountain position={[-112, 0, -48]} scale={0.62} rotY={2.0}  snow={false} />
-            <Mountain position={[-113, 0,  12]} scale={0.65} rotY={2.8}  snow={false} />
-            <Mountain position={[-110, 0,  52]} scale={0.58} rotY={1.6}  snow={false} />
-
+            <Mountain position={[-112, 0, -48]} scale={0.62} rotY={2.0} snow={false} />
+            <Mountain position={[-113, 0, 12]} scale={0.65} rotY={2.8} snow={false} />
+            <Mountain position={[-110, 0, 52]} scale={0.58} rotY={1.6} snow={false} />
+            <Mountain position={[-112, 0, -48]} scale={0.62} rotY={2.0} snow={false} />
+            <Mountain position={[-113, 0, 12]} scale={0.65} rotY={2.8} snow={false} />
+            <Mountain position={[-110, 0, 52]} scale={0.58} rotY={1.6} snow={false} />
             {/* ── East range (x ≈ 88 → 115) ───────────────────────── */}
-            <Mountain position={[ 92, 0, -65]}  scale={1.1}  rotY={-1.5} snow={true}  />
-            <Mountain position={[ 88, 0, -30]}  scale={1.45} rotY={-2.0} snow={true}  />
-            <Mountain position={[ 98, 0,   5]}  scale={1.0}  rotY={-1.8} snow={false} />
-            <Mountain position={[ 90, 0,  36]}  scale={1.35} rotY={-2.5} snow={true}  />
-            <Mountain position={[ 96, 0,  66]}  scale={0.9}  rotY={-1.2} snow={false} />
+            <Mountain position={[92, 0, -65]} scale={1.1} rotY={-1.5} snow={true} />
+            <Mountain position={[88, 0, -30]} scale={1.45} rotY={-2.0} snow={true} />
+            <Mountain position={[98, 0, 5]} scale={1.0} rotY={-1.8} snow={false} />
+            <Mountain position={[90, 0, 36]} scale={1.35} rotY={-2.5} snow={true} />
+            <Mountain position={[96, 0, 66]} scale={0.9} rotY={-1.2} snow={false} />
+            <Mountain position={[92, 0, -65]} scale={1.1} rotY={-1.5} snow={true} />
+            <Mountain position={[88, 0, -30]} scale={1.45} rotY={-2.0} snow={true} />
+            <Mountain position={[98, 0, 5]} scale={1.0} rotY={-1.8} snow={false} />
+            <Mountain position={[90, 0, 36]} scale={1.35} rotY={-2.5} snow={true} />
+            <Mountain position={[96, 0, 66]} scale={0.9} rotY={-1.2} snow={false} />
             {/* Back layer */}
-            <Mountain position={[110, 0, -52]}  scale={0.6}  rotY={-2.2} snow={false} />
-            <Mountain position={[113, 0,  14]}  scale={0.68} rotY={-2.7} snow={false} />
-            <Mountain position={[110, 0,  58]}  scale={0.55} rotY={-1.4} snow={false} />
-
+            <Mountain position={[110, 0, -52]} scale={0.6} rotY={-2.2} snow={false} />
+            <Mountain position={[113, 0, 14]} scale={0.68} rotY={-2.7} snow={false} />
+            <Mountain position={[110, 0, 58]} scale={0.55} rotY={-1.4} snow={false} />
+            <Mountain position={[110, 0, -52]} scale={0.6} rotY={-2.2} snow={false} />
+            <Mountain position={[113, 0, 14]} scale={0.68} rotY={-2.7} snow={false} />
+            <Mountain position={[110, 0, 58]} scale={0.55} rotY={-1.4} snow={false} />
             {/* ── Corner massifs (where borders meet) ─────────────── */}
-            <Mountain position={[-85, 0, -87]}  scale={1.2}  rotY={0.8}  snow={true}  />
-            <Mountain position={[ 85, 0, -87]}  scale={1.3}  rotY={-0.6} snow={true}  />
-            <Mountain position={[-85, 0,  88]}  scale={1.1}  rotY={1.2}  snow={true}  />
-            <Mountain position={[ 85, 0,  88]}  scale={1.25} rotY={-1.0} snow={true}  />
+            <Mountain position={[-85, 0, -87]} scale={1.2} rotY={0.8} snow={true} />
+            <Mountain position={[85, 0, -87]} scale={1.3} rotY={-0.6} snow={true} />
+            <Mountain position={[-85, 0, 88]} scale={1.1} rotY={1.2} snow={true} />
+            <Mountain position={[85, 0, 88]} scale={1.25} rotY={-1.0} snow={true} />
+            <Mountain position={[-85, 0, -87]} scale={1.2} rotY={0.8} snow={true} />
+            <Mountain position={[85, 0, -87]} scale={1.3} rotY={-0.6} snow={true} />
+            <Mountain position={[-85, 0, 88]} scale={1.1} rotY={1.2} snow={true} />
+            <Mountain position={[85, 0, 88]} scale={1.25} rotY={-1.0} snow={true} />
           </group>
-
-
           {/* Ground Details (Hills, Bushes, Rocks) */}
           <group>
             {/* Hills removed to prevent overlapping with buildings */}
             {/* Random bushes and rocks removed as requested to prevent clipping into buildings */}
           </group>
-
           {/* Main Roads System */}
           <group position={[0, 0, 0]}>
             {/* Horizontal Road - Asphalt */}
@@ -826,7 +1039,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
               <planeGeometry args={[8, 200]} />
               <meshStandardMaterial color="#2b2b2b" roughness={0.9} />
             </mesh>
-
             {/* Outer Ring Roads */}
             {[
               [0, 28, 80, 6], [0, -20, 80, 6],
@@ -840,7 +1052,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 </mesh>
               </group>
             ))}
-
             {/* Natural Entrances / Gates at the 4 ends of the city */}
             {[
               [0, 95, 0], [0, -95, 0], [95, 0, Math.PI / 2], [-95, 0, Math.PI / 2]
@@ -865,9 +1076,8 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 <Bush position={[6.5, 0, 0]} scale={1.2} />
               </group>
             ))}
+            {/* --- Road Markings --- */}
 
-            {/* --- Road Markings (تخطيط الشوارع) --- */}
-            
             {/* Center Dashed Lines (Yellow) */}
             {[...Array(40)].map((_, i) => (
               <mesh key={`hline-${i}`} position={[-95 + i * 5, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -879,7 +1089,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 <planeGeometry args={[2, 0.2]} /><meshStandardMaterial color="#f1c40f" />
               </mesh>
             ))}
-
             {/* Continuous Edge Lines (White) */}
             {/* Horizontal Edge Lines */}
             <mesh position={[0, 0.06, -3.7]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
@@ -887,13 +1096,11 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             {/* Vertical Edge Lines */}
             <mesh position={[-3.7, 0.06, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
             <mesh position={[3.7, 0.06, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}><planeGeometry args={[200, 0.15]} /><meshStandardMaterial color="#ffffff" /></mesh>
-
             {/* Sidewalk Borders (Natural Stone) */}
             <mesh position={[0, 0.1, -4.3]} receiveShadow castShadow><boxGeometry args={[200, 0.3, 0.6]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
             <mesh position={[0, 0.1, 4.3]} receiveShadow castShadow><boxGeometry args={[200, 0.3, 0.6]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
             <mesh position={[-4.3, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.6, 0.3, 200]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
             <mesh position={[4.3, 0.1, 0]} receiveShadow castShadow><boxGeometry args={[0.6, 0.3, 200]} /><meshStandardMaterial color="#95a5a6" roughness={1} /></mesh>
-
             {/* Crosswalks (Faded White) */}
             {[...Array(6)].map((_, i) => (
               <mesh key={`cw-n-${i}`} position={[-3 + i * 1.2, 0.06, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
@@ -907,7 +1114,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             {[...Array(6)].map((_, i) => (
               <mesh key={`cw-w-${i}`} position={[-5, 0.06, -3 + i * 1.2]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow><planeGeometry args={[0.6, 2]} /><meshStandardMaterial color="rgba(255,255,255,0.7)" transparent /></mesh>
             ))}
-
             {/* Streetlights - Main roads */}
             {[[-10, -4.5], [-20, -4.5], [10, -4.5], [20, -4.5], [-30, -4.5], [-40, -4.5], [30, -4.5], [40, -4.5], [-50, -4.5], [50, -4.5]].map((pos, i) => <StreetLight key={`sl1-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, Math.PI / 2, 0]} lightPower={lampPower} />)}
             {[[-10, 4.5], [-20, 4.5], [10, 4.5], [20, 4.5], [-30, 4.5], [-40, 4.5], [30, 4.5], [40, 4.5], [-50, 4.5], [50, 4.5]].map((pos, i) => <StreetLight key={`sl2-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, -Math.PI / 2, 0]} lightPower={lampPower} />)}
@@ -916,11 +1122,7 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             {/* sl4: x=+4.5 (east side) → arm must point toward -X (road center), so rotation 0 */}
             {[[4.5, -10], [4.5, -20], [4.5, 10], [4.5, 20], [4.5, -30], [4.5, -40], [4.5, 30], [4.5, 40], [4.5, 50]].map((pos, i) => <StreetLight key={`sl4-${i}`} position={[pos[0], 0, pos[1]]} rotation={[0, 0, 0]} lightPower={lampPower} />)}
           </group>
-
           {/* MathVerse Central Roundabout removed as requested */}
-
-
-
           {/* Clouds */}
           <Cloud position={[-15, 12, -15]} speed={0.5} scale={1.5} />
           <Cloud position={[10, 15, -5]} speed={0.8} scale={1} />
@@ -931,71 +1133,64 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
           <Cloud position={[-55, 16, -10]} speed={0.7} scale={1.1} />
           <Cloud position={[20, 18, 50]} speed={0.25} scale={2.0} />
           <Cloud position={[-30, 12, -50]} speed={0.45} scale={1.4} />
-
           {/* Buildings */}
           <Building
             type="algebra" position={[-14, 0, -14]} size={[5, 12, 5]} color="#3b82f6"
             title="Algebra Tower" topics={['Equations', 'Functions', 'Variables']} difficulty="Medium"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="geometry" position={[14, 0, -14]} size={[6, 8, 6]} color="#10b981"
             title="Geometry Center" topics={['Area', 'Volume', 'Spatial Reasoning']} difficulty="Easy"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="data" position={[-16, 0, 12]} size={[6, 7, 6]} color="#f59e0b"
             title="Data Center" topics={['Statistics', 'Data Analysis', 'Charts']} difficulty="Medium"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="ai" position={[16, 0, 12]} size={[5, 10, 5]} color="#8b5cf6"
             title="AI Lab" topics={['Pattern Recognition', 'Predictions', 'Neural Basics']} difficulty="Hard"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="cyber" position={[10, 0, -30]} size={[7, 9, 7]} color="#ef4444"
             title="Cyber Security Center" topics={['Logic', 'Encryption', 'Defense']} difficulty="Expert"
             onClick={setSelectedBuilding}
           />
-
           {/* New Buildings */}
           <Building
             type="physics" position={[-38, 0, -12]} size={[6, 10, 6]} color="#e67e22"
             title="Function Observatory" topics={['Linear', 'Quadratic', 'Polynomials']} difficulty="Hard"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="code" position={[38, 0, -12]} size={[6, 8, 6]} color="#00b894"
             title="Algorithm Arena" topics={['Algorithms', 'Loops', 'Logic']} difficulty="Medium"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="chemistry" position={[-14, 0, 38]} size={[6, 8, 6]} color="#6c5ce7"
             title="Probability Lab" topics={['Statistics', 'Chance', 'Distributions']} difficulty="Medium"
             onClick={setSelectedBuilding}
           />
-
           <Building
             type="music" position={[14, 0, 38]} size={[6, 7, 6]} color="#fd79a8"
             title="Pattern Academy" topics={['Sequences', 'Fractals', 'Symmetry']} difficulty="Easy"
             onClick={setSelectedBuilding}
           />
-
           {/* Deco Buildings (No interactions) */}
           <DecoBuilding position={[-45, 0, -35]} size={[8, 14, 8]} color="#7f8c8d" type="box" />
           <DecoBuilding position={[45, 0, -35]} size={[7, 18, 7]} color="#95a5a6" type="tower" />
-          <DecoBuilding position={[-45, 0, 38]} size={[7, 12, 7]} color="#bdc3c7" type="tower" />
+          <Building
+            type="skyport" position={[-45, 0, 38]} size={[8, 6, 8]} color="#00c8ff"
+            title="Explorer Gateway" topics={['Sky Island — Coming Soon']} difficulty="???"
+            onClick={setSelectedBuilding}
+          />
           <DecoBuilding position={[45, 0, 38]} size={[8, 10, 8]} color="#34495e" type="box" />
           <DecoBuilding position={[12, 0, -50]} size={[8, 16, 8]} color="#95a5a6" type="box" />
           <DecoBuilding position={[12, 0, 52]} size={[7, 15, 7]} color="#7f8c8d" type="tower" />
-
           {/* Decorative Elements */}
           <Tree position={[-8, 0, -8]} scale={1.2} />
           <Tree position={[-6, 0, -10]} scale={0.8} />
@@ -1041,7 +1236,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
               <mesh position={[0.6, 0.15, 0]} castShadow><boxGeometry args={[0.1, 0.3, 0.4]} /><meshStandardMaterial color="#333" /></mesh>
             </group>
           ))}
-
           {/* ====== Lake & Nature Zone ====== */}
           <group position={[-58, 0, 18]}>
             {/* Sandy / muddy shore base */}
@@ -1049,7 +1243,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
               <circleGeometry args={[1, 32]} />
               <meshStandardMaterial color="#c2a96e" roughness={1} />
             </mesh>
-
             {/* Water surface — main layer */}
             <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[11, 7.5, 1]} receiveShadow>
               <circleGeometry args={[1, 32]} />
@@ -1062,35 +1255,44 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 emissiveIntensity={isNight ? 0.4 : 0.1}
               />
             </mesh>
-
             {/* Water shimmer layer on top */}
             <mesh position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[10.5, 7, 1]}>
               <circleGeometry args={[1, 32]} />
               <meshStandardMaterial color="#87ceeb" transparent opacity={0.2} roughness={0} />
             </mesh>
-
             {/* Rocks around the shore — various sizes */}
             {[
-              [10, 0, 0,   1.4, '#7f8c8d'],   // East big
-              [8,  0, 4,   0.8, '#95a5a6'],
-              [5,  0, 8,   1.1, '#6d7d8b'],
+              [10, 0, 0, 1.4, '#7f8c8d'],   // East big
+              [8, 0, 4, 0.8, '#95a5a6'],
+              [5, 0, 8, 1.1, '#6d7d8b'],
+              [10, 0, 0, 1.4, '#7f8c8d'],   // East big
+              [8, 0, 4, 0.8, '#95a5a6'],
+              [5, 0, 8, 1.1, '#6d7d8b'],
               [-2, 0, 9.5, 0.9, '#7f8c8d'],
-              [-8, 0, 7,   1.3, '#555f69'],
-              [-12,0, 2,   1.0, '#95a5a6'],
-              [-11,0,-4,   0.7, '#6d7d8b'],
-              [-7, 0,-8,   1.2, '#7f8c8d'],
-              [0,  0,-9.5, 0.9, '#9aabb5'],
-              [6,  0,-7,   1.4, '#555f69'],
-              [11, 0,-3,   0.8, '#7f8c8d'],
-              [3,  0, 9,   0.6, '#95a5a6'],
-              [-4, 0,-9,   1.1, '#6d7d8b'],
+              [-8, 0, 7, 1.3, '#555f69'],
+              [-12, 0, 2, 1.0, '#95a5a6'],
+              [-11, 0, -4, 0.7, '#6d7d8b'],
+              [-7, 0, -8, 1.2, '#7f8c8d'],
+              [0, 0, -9.5, 0.9, '#9aabb5'],
+              [6, 0, -7, 1.4, '#555f69'],
+              [11, 0, -3, 0.8, '#7f8c8d'],
+              [3, 0, 9, 0.6, '#95a5a6'],
+              [-4, 0, -9, 1.1, '#6d7d8b'],
+              [-8, 0, 7, 1.3, '#555f69'],
+              [-12, 0, 2, 1.0, '#95a5a6'],
+              [-11, 0, -4, 0.7, '#6d7d8b'],
+              [-7, 0, -8, 1.2, '#7f8c8d'],
+              [0, 0, -9.5, 0.9, '#9aabb5'],
+              [6, 0, -7, 1.4, '#555f69'],
+              [11, 0, -3, 0.8, '#7f8c8d'],
+              [3, 0, 9, 0.6, '#95a5a6'],
+              [-4, 0, -9, 1.1, '#6d7d8b'],
             ].map(([x, y, z, s, c], i) => (
               <mesh key={`lakerock-${i}`} position={[x, 0.15, z]} scale={s} castShadow receiveShadow>
                 <dodecahedronGeometry args={[0.65, 0]} />
                 <meshStandardMaterial color={c} flatShading roughness={0.9} />
               </mesh>
             ))}
-
             {/* Small pebble clusters */}
             {[
               [7, 6], [-5, 8.5], [-10, -2], [4, -8], [9, -5],
@@ -1104,7 +1306,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 ))}
               </group>
             ))}
-
             {/* Reed / grass sticks along shore */}
             {[
               [9, 3], [7.5, -2], [-9, 3], [-6, 8], [2, 9], [-3, -9],
@@ -1121,7 +1322,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 </mesh>
               </group>
             ))}
-
             {/* Lily pads on water */}
             {[
               [3, 2], [-3, 1], [1, -3], [-2, -2], [5, -1],
@@ -1135,11 +1335,11 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 {/* Flower */}
                 <mesh position={[0, 0.05, 0]}>
                   <sphereGeometry args={[0.12, 6, 6]} />
-                  <meshStandardMaterial color={['#ff69b4','#fff','#ffe4b5','#ff69b4','#fff'][i]} emissive={['#ff69b4','#eee','#ffd700','#ff69b4','#eee'][i]} emissiveIntensity={0.3} />
+                  <meshStandardMaterial color={['#ff69b4', '#fff', '#ffe4b5', '#ff69b4', '#fff'][i]} emissive={['#ff69b4', '#eee', '#ffd700', '#ff69b4', '#eee'][i]} emissiveIntensity={0.3} />
+                  <meshStandardMaterial color={['#ff69b4', '#fff', '#ffe4b5', '#ff69b4', '#fff'][i]} emissive={['#ff69b4', '#eee', '#ffd700', '#ff69b4', '#eee'][i]} emissiveIntensity={0.3} />
                 </mesh>
               </group>
             ))}
-
             {/* Trees forming a forest around the lake */}
             {[
               [13, -6, 1.4], [13, 6, 1.1], [9, 12, 1.6], [0, 13, 1.2],
@@ -1148,7 +1348,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
             ].map(([x, z, s], i) => (
               <Tree key={`laketree-${i}`} position={[x, 0, z]} scale={s} />
             ))}
-
             {/* Wooden dock / pier */}
             <group position={[9.5, 0.12, 0]} rotation={[0, Math.PI / 2, 0]}>
               {/* Planks */}
@@ -1166,54 +1365,52 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 </mesh>
               ))}
             </group>
-
             {/* Night-time water glow point light */}
             {isNight && (
               <pointLight position={[0, 1.5, 0]} color="#1e90ff" intensity={6} distance={18} decay={2} />
             )}
           </group>
-
-          <Player avatarColor={avatarColor} avatarGender={avatarGender} accessories={accessories} onMove={handlePlayerMove} cameraMode={cameraMode} />
+          <Player avatarColor={avatarColor} avatarGender={avatarGender} accessories={accessories} onMove={handlePlayerMove} cameraMode={cameraMode} spawnPosition={spawnPosition} currentStage={currentStage} />
         </Canvas>
       </KeyboardControls>
-
-      {/* Floating HUD */}
-      <div style={{ position: 'absolute', top: '2rem', left: '2rem', pointerEvents: 'none' }}>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.9)',
-          padding: '15px 25px',
-          borderRadius: '16px',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
-          border: '1px solid rgba(255,255,255,1)'
-        }}>
-          <h2 style={{ color: '#2c3e50', margin: '0 0 5px 0', fontFamily: 'Space Grotesk', fontSize: '1.5rem', fontWeight: 'bold' }}>
-            MathVerse
-          </h2>
-          <p style={{ color: '#7f8c8d', margin: 0, fontSize: '0.9rem', fontWeight: '500' }}>
-            Use W A S D or Arrow Keys to explore
-          </p>
+      {/* Floating HUD — Hide when in welcome stage */}
+      {currentStage !== 'welcome' && (
+        <div style={{ position: 'absolute', top: '2rem', left: '2rem', pointerEvents: 'none' }}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.9)',
+            padding: '15px 25px',
+            borderRadius: '16px',
+            boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
+            border: '1px solid rgba(255,255,255,1)'
+          }}>
+            <h2 style={{ color: '#2c3e50', margin: '0 0 5px 0', fontFamily: 'Space Grotesk', fontSize: '1.5rem', fontWeight: 'bold' }}>
+              MathVerse
+            </h2>
+            <p style={{ color: '#7f8c8d', margin: 0, fontSize: '0.9rem', fontWeight: '500' }}>
+              Use W A S D or Arrow Keys to explore
+            </p>
+          </div>
         </div>
-      </div>
-
-      {/* Circular Minimap HUD */}
-      <div style={{
-        position: 'absolute',
-        bottom: '2rem',
-        left: '2rem',
-        width: '180px',
-        height: '180px',
-        borderRadius: '50%',
-        background: 'rgba(26, 30, 40, 0.75)',
-        backdropFilter: 'blur(8px)',
-        border: '3px solid rgba(0, 240, 255, 0.4)',
-        boxShadow: '0 8px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 240, 255, 0.2)',
-        overflow: 'hidden',
-        pointerEvents: 'none'
-      }}>
+      )}
+      {/* Circular Minimap HUD — Hide when in welcome stage */}
+      {currentStage !== 'welcome' && (
+        <div style={{
+          position: 'absolute',
+          bottom: '2rem',
+          left: '2rem',
+          width: '180px',
+          height: '180px',
+          borderRadius: '50%',
+          background: 'rgba(26, 30, 40, 0.75)',
+          backdropFilter: 'blur(8px)',
+          border: '3px solid rgba(0, 240, 255, 0.4)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 240, 255, 0.2)',
+          overflow: 'hidden',
+          pointerEvents: 'none'
+        }}>
         {/* Roads on minimap */}
         <div style={{ position: 'absolute', left: '50%', top: '0', width: '2px', height: '100%', background: 'rgba(127,140,141,0.4)', transform: 'translateX(-50%)' }} />
         <div style={{ position: 'absolute', top: '50%', left: '0', width: '100%', height: '2px', background: 'rgba(127,140,141,0.4)', transform: 'translateY(-50%)' }} />
-
         {/* Render building blips */}
         {(() => {
           const buildingColors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#e67e22', '#00b894', '#6c5ce7', '#fd79a8'];
@@ -1267,7 +1464,7 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
           }
         `}</style>
       </div>
-
+      )}
       {/* Building Interaction Modal */}
       <AnimatePresence>
         {selectedBuilding && (
@@ -1304,7 +1501,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                   onMouseOut={(e) => { e.target.style.background = '#f1f2f6'; e.target.style.color = '#747d8c'; }}
                 >×</button>
               </div>
-
               <div style={{ marginBottom: '1.5rem' }}>
                 <span style={{ color: '#a4b0be', fontSize: '0.85rem', fontWeight: 'bold', letterSpacing: '1px' }}>LEARNING TOPICS</span>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
@@ -1322,7 +1518,6 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                   ))}
                 </div>
               </div>
-
               <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', background: '#f1f2f6', padding: '16px 20px', borderRadius: '16px' }}>
                 <div>
                   <span style={{ color: '#a4b0be', fontSize: '0.85rem', fontWeight: 'bold' }}>DIFFICULTY</span>
@@ -1331,28 +1526,40 @@ export default function FutureTechCity({ onEnterBuilding, avatarColor, avatarGen
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ color: '#a4b0be', fontSize: '0.85rem', fontWeight: 'bold' }}>STATUS</span>
                   <div style={{ color: '#2ed573', fontWeight: 'bold', fontSize: '1.2rem', marginTop: '4px' }}>Unlocked</div>
+                  <div style={{ color: selectedBuilding.type === 'skyport' ? '#7c3aed' : '#2ed573', fontWeight: 'bold', fontSize: '1.2rem', marginTop: '4px' }}>
+                    {selectedBuilding.type === 'skyport' ? 'Available' : 'Unlocked'}
+                  </div>
                 </div>
               </div>
-
-              <button style={{
-                width: '100%', padding: '18px',
-                background: selectedBuilding.color, color: 'white',
-                border: 'none', borderRadius: '16px',
-                fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer',
-                fontFamily: 'Outfit, sans-serif',
-                boxShadow: `0 8px 20px ${selectedBuilding.color}50`,
-                transition: 'all 0.2s',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}
+              <button
+                style={{
+                  width: '100%', padding: '18px',
+                  background: selectedBuilding.type === 'skyport' ? 'linear-gradient(135deg, #7c3aed, #a78bfa)' : selectedBuilding.color,
+                  color: 'white',
+                  border: 'none', borderRadius: '16px',
+                  fontSize: '1.1rem', fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontFamily: 'Outfit, sans-serif',
+                  boxShadow: `0 8px 20px ${selectedBuilding.color}50`,
+                  transition: 'all 0.2s',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                }}
                 onClick={() => {
                   if (onEnterBuilding) onEnterBuilding(selectedBuilding);
-                  setSelectedBuilding(null); // Close the modal
+                  // Close the modal after entering — the fade overlay covers the transition
+                  setSelectedBuilding(null);
                 }}
-                onMouseOver={(e) => { e.target.style.transform = 'translateY(-3px)'; e.target.style.boxShadow = `0 12px 25px ${selectedBuilding.color}60`; }}
-                onMouseOut={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = `0 8px 20px ${selectedBuilding.color}50`; }}
+                onMouseOver={(e) => {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = `0 12px 25px ${selectedBuilding.color}60`;
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = `0 8px 20px ${selectedBuilding.color}50`;
+                }}
               >
-                Enter Environment
+                {selectedBuilding.type === 'skyport' ? '🚀 Explore Sky Island' : 'Enter Environment'}
               </button>
             </div>
           </motion.div>
