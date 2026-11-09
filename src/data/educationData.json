@@ -1,0 +1,1225 @@
+{
+  "subjects": [
+    {
+      "id": "algebra",
+      "name": "Algebra Tower",
+      "description": "Master equations, functions, and variables.",
+      "icon": "Binary",
+      "color": "#3b82f6",
+      "gradient": "algebra-world",
+      "mentor": "Nova Agent",
+      "progress": 80,
+      "xpEarned": 520,
+      "completedLessons": 8,
+      "totalLessons": 10,
+      "courses": [
+        { "id": 1, "title": "Basic Variables", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" },
+        { "id": 2, "title": "Algebraic Expressions", "status": "completed", "difficulty": "Medium", "xp": 75, "duration": "20 Min" },
+        { "id": 3, "title": "Linear Equations", "status": "current", "difficulty": "Medium", "xp": 100, "duration": "25 Min" }
+      ],
+      "paths": [
+        {
+          "id": "variables-equations",
+          "name": "Variables & Equations Path",
+          "icon": "Binary",
+          "description": "Master the fundamentals of algebraic representation and solving equations.",
+          "totalXp": 1050,
+          "progress": 80,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Basic Variables",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Understand variables as placeholders for unknown values and how they are used.",
+              "lessons": [
+                { "id": 1, "title": "What is a Variable?", "duration": "5 Min", "xp": 15, "status": "completed", "icon": "Binary" },
+                { "id": 2, "title": "Substituting Values", "duration": "5 Min", "xp": 15, "status": "completed", "icon": "BookOpen" },
+                { "id": 3, "title": "Variables in Context", "duration": "5 Min", "xp": 20, "status": "completed", "icon": "Sparkles" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Algebraic Expressions",
+              "status": "completed",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Combine variables, operators, and coefficients to write algebraic expressions.",
+              "lessons": [
+                { "id": 1, "title": "Coefficients & Terms", "duration": "5 Min", "xp": 20, "status": "completed", "icon": "Binary" },
+                { "id": 2, "title": "Combining Like Terms", "duration": "5 Min", "xp": 20, "status": "completed", "icon": "Search" },
+                { "id": 3, "title": "Evaluating Expressions", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Trophy" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Linear Equations",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Solve single-variable equations using standard properties of equality.",
+              "lessons": [
+                { "id": 1, "title": "Equality Properties", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Scale" },
+                { "id": 2, "title": "One-Step Equations", "duration": "5 Min", "xp": 25, "status": "current", "icon": "Play" },
+                { "id": 3, "title": "Two-Step Equations", "duration": "5 Min", "xp": 25, "status": "locked", "icon": "Lock" },
+                { "id": 4, "title": "Variables on Both Sides", "duration": "10 Min", "xp": 25, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Multi-Step Equations",
+              "status": "unlocked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Evaluate equations requiring distribution and grouping of terms.",
+              "lessons": [
+                { "id": 1, "title": "Distributive Property in Equations", "duration": "10 Min", "xp": 50, "status": "unlocked", "icon": "TrendingUp" },
+                { "id": 2, "title": "Rational Coefficients", "duration": "10 Min", "xp": 50, "status": "locked", "icon": "Lock" },
+                { "id": 3, "title": "Word Problem Formulations", "duration": "10 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Graphing Inequalities",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 200,
+              "duration": "40 Min",
+              "description": "Graph algebraic inequality ranges on standard coordinates.",
+              "lessons": [
+                { "id": 1, "title": "Inequalities Intro", "duration": "10 Min", "xp": 60, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Solving Systems of Inequalities", "duration": "15 Min", "xp": 70, "status": "locked", "icon": "Lock" },
+                { "id": 3, "title": "Boundary Line Graphing", "duration": "15 Min", "xp": 70, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Final Algebra Challenge",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "60 Min",
+              "isBoss": true,
+              "description": "Tackle the ultimate Algebra Tower checkpoint. Complete multi-step challenges.",
+              "lessons": [
+                { "id": 1, "title": "Algebra Grandmaster Exam", "duration": "60 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "algebraic-functions",
+          "name": "Algebraic Functions Path",
+          "icon": "TrendingUp",
+          "description": "Understand function structures, relations, and functional modeling.",
+          "totalXp": 800,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Introduction to Relations",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Analyze sets of ordered pairs and graph coordinates mapping.",
+              "lessons": [
+                { "id": 1, "title": "Relations & Mapping Diagrams", "duration": "5 Min", "xp": 15, "status": "unlocked", "icon": "Compass" },
+                { "id": 2, "title": "Domain & Range Identification", "duration": "10 Min", "xp": 35, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Functions & Vertical Line Test",
+              "status": "locked",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "20 Min",
+              "description": "Learn what constitutes a mathematical function.",
+              "lessons": [
+                { "id": 1, "title": "Definition of a Function", "duration": "10 Min", "xp": 50, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "The Vertical Line Test", "duration": "10 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Function Notation",
+              "status": "locked",
+              "difficulty": "Medium",
+              "xp": 150,
+              "duration": "25 Min",
+              "description": "Master f(x) functional notations and evaluation parameters.",
+              "lessons": [
+                { "id": 1, "title": "Evaluating f(x) Expressions", "duration": "10 Min", "xp": 75, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Composite Functions", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Functions Master Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Solve functional mapping logic and complete the Functions Arena.",
+              "lessons": [
+                { "id": 1, "title": "Advanced Function Modeling", "duration": "45 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "geometry",
+      "name": "Geometry Center",
+      "description": "Explore areas, volumes, and spatial symmetry principles.",
+      "icon": "Triangle",
+      "color": "#10b981",
+      "gradient": "geometry-world",
+      "mentor": "Archimedes",
+      "progress": 60,
+      "xpEarned": 385,
+      "completedLessons": 6,
+      "totalLessons": 10,
+      "courses": [
+        { "id": 1, "title": "Shapes & Perimeters", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "euclidean-shapes",
+          "name": "Euclidean Shapes Path",
+          "icon": "Triangle",
+          "description": "Journey through shapes, areas, dimensions, and theorems.",
+          "totalXp": 975,
+          "progress": 60,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Shapes & Perimeters",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Calculate regular polygon borders and perimeter lengths.",
+              "lessons": [
+                { "id": 1, "title": "Polygons Properties", "duration": "5 Min", "xp": 20, "status": "completed", "icon": "Triangle" },
+                { "id": 2, "title": "Perimeter Calculations", "duration": "10 Min", "xp": 30, "status": "completed", "icon": "Ruler" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Areas & Volumes",
+              "status": "completed",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Understand 2D space sizing and 3D volume parameters.",
+              "lessons": [
+                { "id": 1, "title": "2D Area Formulas", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Ruler" },
+                { "id": 2, "title": "3D Prisms & Volume", "duration": "10 Min", "xp": 40, "status": "completed", "icon": "Puzzle" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Trigonometry Basics",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Apply sine, cosine, and tangent ratios in right-angled triangles.",
+              "lessons": [
+                { "id": 1, "title": "Right-Angle Trigonometry", "duration": "10 Min", "xp": 50, "status": "completed", "icon": "Scale" },
+                { "id": 2, "title": "SOHCAHTOA Ratios", "duration": "15 Min", "xp": 50, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Spatial Symmetry",
+              "status": "unlocked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Investigate reflections, rotations, and translational symmetry.",
+              "lessons": [
+                { "id": 1, "title": "Line & Rotational Symmetry", "duration": "15 Min", "xp": 75, "status": "unlocked", "icon": "RefreshCw" },
+                { "id": 2, "title": "Transformation Matrices", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Cartesian Coordinates",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 100,
+              "duration": "30 Min",
+              "description": "Map coordinate offsets and line lengths using coordinate geometry.",
+              "lessons": [
+                { "id": 1, "title": "Distance and Midpoint Formulas", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Slope of Parallel Lines", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Geometry Overlord Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Tackle the ultimate geometry proving grounds. Solve spatial puzzles.",
+              "lessons": [
+                { "id": 1, "title": "Spatial Synthesizer Test", "duration": "45 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "name": "AI Lab",
+      "description": "Decode pattern recognition and neural networks basics.",
+      "icon": "BrainCircuit",
+      "color": "#8b5cf6",
+      "gradient": "ai-world",
+      "mentor": "AI Prime",
+      "progress": 25,
+      "xpEarned": 175,
+      "completedLessons": 2,
+      "totalLessons": 8,
+      "courses": [
+        { "id": 1, "title": "AI Fundamentals", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "machine-learning",
+          "name": "Machine Learning Path",
+          "icon": "BrainCircuit",
+          "description": "Train classification models, regression vectors, and complete neural architectures.",
+          "totalXp": 1100,
+          "progress": 25,
+          "courses": [
+            {
+              "id": 1,
+              "title": "AI Fundamentals",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Understand core definitions of Artificial Intelligence and Machine Learning.",
+              "lessons": [
+                { "id": 1, "title": "Supervised vs Unsupervised", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "BrainCircuit" },
+                { "id": 2, "title": "Introduction to Algorithms", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "Puzzle" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Data Preparation",
+              "status": "completed",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Clean, structure, scale, and normalize real datasets for modeling.",
+              "lessons": [
+                { "id": 1, "title": "Handling Missing Data", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Search" },
+                { "id": 2, "title": "Feature Scaling & Standardization", "duration": "10 Min", "xp": 40, "status": "completed", "icon": "Settings" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Classification Models",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Build decision trees and analyze support vector machines metrics.",
+              "lessons": [
+                { "id": 1, "title": "Decision Trees Classification", "duration": "10 Min", "xp": 50, "status": "completed", "icon": "Compass" },
+                { "id": 2, "title": "Support Vector Machines (SVM)", "duration": "15 Min", "xp": 50, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Regression Models",
+              "status": "unlocked",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Formulate linear regression curves and perform gradient descent updates.",
+              "lessons": [
+                { "id": 1, "title": "Linear Regression Equations", "duration": "10 Min", "xp": 50, "status": "unlocked", "icon": "TrendingUp" },
+                { "id": 2, "title": "Gradient Descent Mechanics", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Model Evaluation",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Formulate confusion matrices, calculate F1 scores, and analyze ROC/AUC.",
+              "lessons": [
+                { "id": 1, "title": "Precision & Recall Metrics", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "ROC and AUC Plot Curves", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Build an AI System",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "60 Min",
+              "isBoss": true,
+              "description": "Create, optimize, and launch a complete neural agent system.",
+              "lessons": [
+                { "id": 1, "title": "Grand AI Deployment", "duration": "60 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "computer-vision",
+          "name": "Computer Vision Path",
+          "icon": "Sparkles",
+          "description": "Master image processing filters, convolutional kernels, and object trackers.",
+          "totalXp": 800,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Image Kernels & Filters",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "20 Min",
+              "description": "Learn matrix operations for blurs, edge highlights, and sharpening filters.",
+              "lessons": [
+                { "id": 1, "title": "Pixel Math & Arrays", "duration": "10 Min", "xp": 25, "status": "unlocked", "icon": "Binary" },
+                { "id": 2, "title": "Convolutions & Kernels", "duration": "10 Min", "xp": 25, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Deep Neural Vision",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 250,
+              "duration": "40 Min",
+              "description": "Design convolutional networks for classifying image libraries.",
+              "lessons": [
+                { "id": 1, "title": "CNN Convolution Layers", "duration": "20 Min", "xp": 125, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Pooling & Fully Connected Layers", "duration": "20 Min", "xp": 125, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Object Detection Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "60 Min",
+              "isBoss": true,
+              "description": "Construct real-time target scanning bounding boxes using custom frameworks.",
+              "lessons": [
+                { "id": 1, "title": "Vision Agent Challenge", "duration": "60 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "prompt-engineering",
+          "name": "Prompt Engineering Path",
+          "icon": "BookOpen",
+          "description": "Structure optimal contexts, prompt parameters, and agent frameworks.",
+          "totalXp": 700,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Prompt Basics",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Formulate base queries, instructions, and target roles.",
+              "lessons": [
+                { "id": 1, "title": "Instruction Construction", "duration": "5 Min", "xp": 25, "status": "unlocked", "icon": "Compass" },
+                { "id": 2, "title": "Few-Shot Context Injection", "duration": "10 Min", "xp": 25, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Logical Reasoning Prompts",
+              "status": "locked",
+              "difficulty": "Medium",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Implement Chain of Thought and multi-turn iterative reasoning trees.",
+              "lessons": [
+                { "id": 1, "title": "Chain of Thought Structuring", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "ReAct Framework Tools Integration", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Agentic Prompt Orchestrator Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "50 Min",
+              "isBoss": true,
+              "description": "Launch an autonomous swarm of prompt executors to solve a code review matrix.",
+              "lessons": [
+                { "id": 1, "title": "Prompt Swarm Capstone", "duration": "50 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cyber",
+      "name": "Cyber Security Center",
+      "description": "Learn digital logic gates, modular cryptography, and security.",
+      "icon": "Lock",
+      "color": "#ef4444",
+      "gradient": "cyber-world",
+      "mentor": "Cyber Sentinel",
+      "progress": 10,
+      "xpEarned": 75,
+      "completedLessons": 1,
+      "totalLessons": 10,
+      "courses": [
+        { "id": 1, "title": "Security Foundations", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "ethical-hacking",
+          "name": "Ethical Hacking Path",
+          "icon": "Zap",
+          "description": "Audit linux shells, deploy port scanners, identify vulnerabilities, and hack mock assets.",
+          "totalXp": 1100,
+          "progress": 10,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Security Foundations",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Understand target classification, assets evaluation, and threat vectors.",
+              "lessons": [
+                { "id": 1, "title": "Asset Management", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Lock" },
+                { "id": 2, "title": "Vulnerability Concepts", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "ShieldAlert" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Linux Fundamentals",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Navigate secure directories, assign file modifiers, and control processes.",
+              "lessons": [
+                { "id": 1, "title": "Navigating directories via Terminal", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Play" },
+                { "id": 2, "title": "User groups permissions and chmod", "duration": "10 Min", "xp": 40, "status": "current", "icon": "FileText" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Network Scanning",
+              "status": "unlocked",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Launch port scanners, verify open protocols, and filter packet flags.",
+              "lessons": [
+                { "id": 1, "title": "Host Discovery Scans", "duration": "10 Min", "xp": 50, "status": "unlocked", "icon": "Search" },
+                { "id": 2, "title": "Nmap OS Fingerprinting", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Vulnerability Analysis",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Identify configuration exploits and parse automated security logs.",
+              "lessons": [
+                { "id": 1, "title": "Interpreting Nessus Audits", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Common Vulnerabilities & Exposures", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Web Security Basics",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 200,
+              "duration": "40 Min",
+              "description": "Understand OWASP Top 10 web vulnerabilities like SQL injection and XSS.",
+              "lessons": [
+                { "id": 1, "title": "SQL Injection Basics", "duration": "20 Min", "xp": 100, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Cross-Site Scripting Exploits", "duration": "20 Min", "xp": 100, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Ethical Hacking Challenge",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "60 Min",
+              "isBoss": true,
+              "description": "Complete the final CTF Hacking Challenge. Break into the mock target network.",
+              "lessons": [
+                { "id": 1, "title": "Ethical Hacking Grand Capstone", "duration": "60 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "network-security",
+          "name": "Network Security Path",
+          "icon": "Cpu",
+          "description": "Build firewalls, block ports, filter packets, and configure VPN tunnels.",
+          "totalXp": 800,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Ports and Protocol Guard",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 100,
+              "duration": "15 Min",
+              "description": "Lock down unsafe ports and analyze protocol metadata packets.",
+              "lessons": [
+                { "id": 1, "title": "Secure Ports configuration", "duration": "15 Min", "xp": 100, "status": "unlocked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Intrusion Prevention Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 700,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Build custom intrusion prevention scripts to block live cyber attacks.",
+              "lessons": [
+                { "id": 1, "title": "IPS Firewall Integration", "duration": "45 Min", "xp": 700, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "digital-forensics",
+          "name": "Digital Forensics Path",
+          "icon": "Search",
+          "description": "Collect hardware evidence, recover hex files, and analyze volatile memory.",
+          "totalXp": 600,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Evidence Integrity",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 100,
+              "duration": "20 Min",
+              "description": "Learn forensic copy commands, write-block filters, and hashing.",
+              "lessons": [
+                { "id": 1, "title": "Forensic Copies & MD5 Hashes", "duration": "20 Min", "xp": 100, "status": "unlocked", "icon": "FileText" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Case Analysis Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "50 Min",
+              "isBoss": true,
+              "description": "Rebuild corrupted file images and solve a cyber crime scenario.",
+              "lessons": [
+                { "id": 1, "title": "Case Analysis Challenge", "duration": "50 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Data Center",
+      "description": "Analyze statistical data, central tendency, and charts.",
+      "icon": "TrendingUp",
+      "color": "#f59e0b",
+      "gradient": "data-world",
+      "mentor": "Data Guru",
+      "progress": 40,
+      "xpEarned": 240,
+      "completedLessons": 4,
+      "totalLessons": 10,
+      "courses": [
+        { "id": 1, "title": "Data Collection Methods", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "data-analysis",
+          "name": "Data Analysis Path",
+          "icon": "TrendingUp",
+          "description": "Journey through databases, central metrics, and graphical chart analysis.",
+          "totalXp": 925,
+          "progress": 40,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Data Collection Methods",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Study database querying, logs parsing, and target survey groups.",
+              "lessons": [
+                { "id": 1, "title": "Querying Databases", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Search" },
+                { "id": 2, "title": "Survey Groups Sampling", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "FileText" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Central Tendency Measures",
+              "status": "completed",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Determine averages, medians, and modal offsets on numeric matrices.",
+              "lessons": [
+                { "id": 1, "title": "Mean, Median & Mode Formulas", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Scale" },
+                { "id": 2, "title": "Weighted Averages Models", "duration": "10 Min", "xp": 40, "status": "completed", "icon": "Binary" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Reading Charts & Graphs",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Interpret histograms, frequency curves, and scatter plots.",
+              "lessons": [
+                { "id": 1, "title": "Histogram Distributions", "duration": "10 Min", "xp": 50, "status": "completed", "icon": "TrendingUp" },
+                { "id": 2, "title": "Scatter Plot Trends", "duration": "15 Min", "xp": 50, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Data Visualization",
+              "status": "unlocked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Format telemetry records into executive graphic dashboards.",
+              "lessons": [
+                { "id": 1, "title": "Graph Layouts Rules", "duration": "15 Min", "xp": 75, "status": "unlocked", "icon": "Compass" },
+                { "id": 2, "title": "Telemetry Integration", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Data Mastery Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 450,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Analyze multi-variable trend files and compile standard deviation sheets.",
+              "lessons": [
+                { "id": 1, "title": "Executive Data Challenge", "duration": "45 Min", "xp": 450, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "name": "Probability Lab",
+      "description": "Learn permutations, combinations, and chance values.",
+      "icon": "Dices",
+      "color": "#6c5ce7",
+      "gradient": "chemistry-world",
+      "mentor": "Probability Professor",
+      "progress": 10,
+      "xpEarned": 75,
+      "completedLessons": 1,
+      "totalLessons": 8,
+      "courses": [
+        { "id": 1, "title": "Probability Basics", "status": "current", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "probability-foundations",
+          "name": "Probability Foundations Path",
+          "icon": "Dices",
+          "description": "Explore sets, coin flips, combinations, and complex chances.",
+          "totalXp": 725,
+          "progress": 10,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Probability Basics",
+              "status": "current",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Calculate probability of single events using fraction ranges.",
+              "lessons": [
+                { "id": 1, "title": "Sample Space Concept", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Dices" },
+                { "id": 2, "title": "Independent Events Odds", "duration": "10 Min", "xp": 25, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Conditional Probability",
+              "status": "unlocked",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Learn Bayes Theorem and evaluate events depending on previous indicators.",
+              "lessons": [
+                { "id": 1, "title": "Dependent Events Calculation", "duration": "10 Min", "xp": 35, "status": "unlocked", "icon": "Link" },
+                { "id": 2, "title": "Bayesian Formula Practice", "duration": "10 Min", "xp": 40, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Permutations & Combinations",
+              "status": "locked",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Utilize factorials to calculate object sequencing permutations.",
+              "lessons": [
+                { "id": 1, "title": "Factorial Algebra rules", "duration": "10 Min", "xp": 50, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Permutations vs Combinations nCr", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Probability Grandmaster Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Calculate odds systems in multiple concurrent simulation parameters.",
+              "lessons": [
+                { "id": 1, "title": "Grandmaster Simulator Test", "duration": "45 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "patterns",
+      "name": "Pattern Academy",
+      "description": "Discover number sequences, geometric symmetry, and cadence.",
+      "icon": "Sparkles",
+      "color": "#fd79a8",
+      "gradient": "music-world",
+      "mentor": "Cadence Guide",
+      "progress": 15,
+      "xpEarned": 110,
+      "completedLessons": 2,
+      "totalLessons": 9,
+      "courses": [
+        { "id": 1, "title": "Number Sequences", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "sequences-symmetry",
+          "name": "Sequences & Symmetry Path",
+          "icon": "Sparkles",
+          "description": "Observe geometric structures, recursion indexes, and mirror layouts.",
+          "totalXp": 825,
+          "progress": 15,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Number Sequences",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Solve arithmetic and geometric progression parameters.",
+              "lessons": [
+                { "id": 1, "title": "Arithmetic Progressions", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Binary" },
+                { "id": 2, "title": "Common Difference Finder", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "Search" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Geometric Patterns",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Identify common ratio values and calculate infinite series.",
+              "lessons": [
+                { "id": 1, "title": "Geometric Common Ratios", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Sparkles" },
+                { "id": 2, "title": "Sum of Infinite Series", "duration": "10 Min", "xp": 40, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Symmetry & Reflection",
+              "status": "unlocked",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Perform shape reflections across mirror axis grids.",
+              "lessons": [
+                { "id": 1, "title": "Mirror Line Equations", "duration": "10 Min", "xp": 50, "status": "unlocked", "icon": "RefreshCw" },
+                { "id": 2, "title": "Translational Vector offsets", "duration": "15 Min", "xp": 50, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Fractals Master Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Solve recursive fractal divisions and unlock high-level geometry shapes.",
+              "lessons": [
+                { "id": 1, "title": "Fractals Generator Challenge", "duration": "45 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "algorithms",
+      "name": "Algorithm Arena",
+      "description": "Master loops, basic algorithms, and computational search.",
+      "icon": "Code",
+      "color": "#00b894",
+      "gradient": "code-world",
+      "mentor": "Code Knight",
+      "progress": 70,
+      "xpEarned": 475,
+      "completedLessons": 7,
+      "totalLessons": 10,
+      "courses": [
+        { "id": 1, "title": "Logical Thinking Basics", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "algorithms-path",
+          "name": "Algorithms Path",
+          "icon": "Code",
+          "description": "Formulate runtime complexity indexes, search hierarchies, and recursive loops.",
+          "totalXp": 1100,
+          "progress": 70,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Problem Solving",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Formulate runtime complexity indexes using standard Big O.",
+              "lessons": [
+                { "id": 1, "title": "Big O Space Complexity", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Lightbulb" },
+                { "id": 2, "title": "Time Complexity Scenarios", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "Search" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Arrays & Pointers",
+              "status": "completed",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Evaluate index parameters using double pointer scans.",
+              "lessons": [
+                { "id": 1, "title": "Two-Pointer Searches", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Binary" },
+                { "id": 2, "title": "Sliding Window Allocations", "duration": "10 Min", "xp": 40, "status": "completed", "icon": "Settings" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Sorting",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 100,
+              "duration": "25 Min",
+              "description": "Trace QuickSort pivots and merge division trees.",
+              "lessons": [
+                { "id": 1, "title": "QuickSort Pivoting Logic", "duration": "10 Min", "xp": 50, "status": "completed", "icon": "Play" },
+                { "id": 2, "title": "MergeSort Divide-Conquer", "duration": "15 Min", "xp": 50, "status": "current", "icon": "PlayCircle" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Searching",
+              "status": "unlocked",
+              "difficulty": "Hard",
+              "xp": 150,
+              "duration": "30 Min",
+              "description": "Perform binary bounds searching on sorted integers.",
+              "lessons": [
+                { "id": 1, "title": "Binary Bounds Split", "duration": "15 Min", "xp": 75, "status": "unlocked", "icon": "Compass" },
+                { "id": 2, "title": "DFS vs BFS Graph Search", "duration": "15 Min", "xp": 75, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Recursion",
+              "status": "locked",
+              "difficulty": "Hard",
+              "xp": 200,
+              "duration": "40 Min",
+              "description": "Understand base cases and trace recursive stacking operations.",
+              "lessons": [
+                { "id": 1, "title": "Base Case Construction", "duration": "20 Min", "xp": 100, "status": "locked", "icon": "Lock" },
+                { "id": 2, "title": "Call Stack Trace", "duration": "20 Min", "xp": 100, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Algorithm Master Challenge",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "60 Min",
+              "isBoss": true,
+              "description": "Solve hard competitive puzzles inside standard clock limits.",
+              "lessons": [
+                { "id": 1, "title": "Algorithm Grandmaster Code Exam", "duration": "60 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "data-structures",
+          "name": "Data Structures Path",
+          "icon": "Cpu",
+          "description": "Construct stacks, queues, hash filters, and binary tree nodes.",
+          "totalXp": 725,
+          "progress": 0,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Stacks and Queues",
+              "status": "unlocked",
+              "difficulty": "Easy",
+              "xp": 100,
+              "duration": "15 Min",
+              "description": "Learn dynamic memory allocation and pointer offsets.",
+              "lessons": [
+                { "id": 1, "title": "LIFO Stacks operations", "duration": "15 Min", "xp": 100, "status": "unlocked", "icon": "Binary" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Graph Indexing Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 625,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Solve memory leaks and build a complete nested graph indexer.",
+              "lessons": [
+                { "id": 1, "title": "Graph Indexer Challenge", "duration": "45 Min", "xp": 625, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "physics",
+      "name": "Function Observatory",
+      "description": "Study linear, quadratic, and polynomial functions.",
+      "icon": "Scale",
+      "color": "#e67e22",
+      "gradient": "physics-world",
+      "mentor": "Newton Agent",
+      "progress": 50,
+      "xpEarned": 225,
+      "completedLessons": 3,
+      "totalLessons": 6,
+      "courses": [
+        { "id": 1, "title": "Linear Functions", "status": "completed", "difficulty": "Easy", "xp": 50, "duration": "15 Min" }
+      ],
+      "paths": [
+        {
+          "id": "functional-curves",
+          "name": "Functional Curves Path",
+          "icon": "Scale",
+          "description": "Evaluate function limits, slopes, parabolas, and polynomials.",
+          "totalXp": 825,
+          "progress": 50,
+          "courses": [
+            {
+              "id": 1,
+              "title": "Linear Functions",
+              "status": "completed",
+              "difficulty": "Easy",
+              "xp": 50,
+              "duration": "15 Min",
+              "description": "Examine line slopes and y-intercept formulas.",
+              "lessons": [
+                { "id": 1, "title": "Slope m Calculation", "duration": "5 Min", "xp": 25, "status": "completed", "icon": "Ruler" },
+                { "id": 2, "title": "Slope-Intercept Equation", "duration": "10 Min", "xp": 25, "status": "completed", "icon": "Scale" }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "Quadratic Functions",
+              "status": "current",
+              "difficulty": "Medium",
+              "xp": 75,
+              "duration": "20 Min",
+              "description": "Graph parabolas, find vertex vectors, and evaluate roots.",
+              "lessons": [
+                { "id": 1, "title": "Quadratic Vertex Form", "duration": "10 Min", "xp": 35, "status": "completed", "icon": "Binary" },
+                { "id": 2, "title": "Solving by Factoring", "duration": "10 Min", "xp": 40, "status": "current", "icon": "Play" }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "Polynomials",
+              "status": "unlocked",
+              "difficulty": "Medium",
+              "xp": 200,
+              "duration": "25 Min",
+              "description": "Combine variables to write degree-three polynomials.",
+              "lessons": [
+                { "id": 1, "title": "Polynomial Degrees", "duration": "10 Min", "xp": 100, "status": "unlocked", "icon": "Binary" },
+                { "id": 2, "title": "Synthetic Division", "duration": "15 Min", "xp": 100, "status": "locked", "icon": "Lock" }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "Function Limits Boss",
+              "status": "locked",
+              "difficulty": "Boss",
+              "xp": 500,
+              "duration": "45 Min",
+              "isBoss": true,
+              "description": "Trace infinity limit curves and solve continuity equations.",
+              "lessons": [
+                { "id": 1, "title": "Continuity Challenge", "duration": "45 Min", "xp": 500, "status": "locked", "icon": "Trophy" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dailyChallenges": [
+    {
+      "id": 1,
+      "title": "Algebra Quiz Master",
+      "description": "Complete a 10-question quiz in Algebra Tower",
+      "xp": 100,
+      "completed": true,
+      "difficulty": "Medium",
+      "category": "algebra"
+    },
+    {
+      "id": 2,
+      "title": "Algorithm Puzzle Solver",
+      "description": "Solve 3 advanced algorithm puzzles",
+      "xp": 150,
+      "completed": false,
+      "difficulty": "Hard",
+      "category": "algorithms"
+    },
+    {
+      "id": 3,
+      "title": "Security Investigation",
+      "description": "Complete the Cyber Security investigation challenge",
+      "xp": 120,
+      "completed": false,
+      "difficulty": "Hard",
+      "category": "cyber"
+    }
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "title": "AI Explorer",
+      "description": "Complete your first AI Lab course",
+      "icon": "BrainCircuit",
+      "color": "#8b5cf6",
+      "unlocked": true,
+      "unlockedDate": "2026-06-10"
+    },
+    {
+      "id": 2,
+      "title": "Security Defender",
+      "description": "Reach 50% progress in Cyber Security Center",
+      "icon": "Lock",
+      "color": "#ef4444",
+      "unlocked": false,
+      "unlockedDate": null
+    },
+    {
+      "id": 3,
+      "title": "Algorithm Master",
+      "description": "Complete all Algorithm Arena courses",
+      "icon": "Code",
+      "color": "#00b894",
+      "unlocked": false,
+      "unlockedDate": null
+    }
+  ],
+  "activityFeed": [
+    {
+      "id": 1,
+      "text": "Earned \"Learning Streak Legend\" badge for 14 consecutive days",
+      "time": "2 hours ago",
+      "icon": "Trophy",
+      "type": "achievement"
+    },
+    {
+      "id": 2,
+      "text": "Completed \"Linear Equations\" course in Algebra Tower",
+      "time": "Today",
+      "icon": "CheckCircle2",
+      "type": "course"
+    }
+  ],
+  "statistics": {
+    "totalCourses": 32,
+    "xpEarned": 1960,
+    "missionsCompleted": 18,
+    "challengesSolved": 12,
+    "learningStreak": 14,
+    "totalLessons": 68,
+    "completedLessons": 28,
+    "achievementsUnlocked": 5,
+    "averageScore": 87.5
+  }
+}
